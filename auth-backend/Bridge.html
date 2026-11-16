@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head><base target="_top"><meta charset="utf-8"></head>
+<body>
+<script>
+(function () {
+  'use strict';
+  const ALLOWED_PARENT_ORIGIN = 'https://leoncioandre-ux.github.io';
+  window.addEventListener('message', function (event) {
+    if (event.origin !== ALLOWED_PARENT_ORIGIN || event.source !== parent) return;
+    const msg = event.data || {};
+    if (msg.type !== 'MAPA_DEMANDA_GET_DATA' || !msg.idToken || !msg.requestId) return;
+    google.script.run
+      .withSuccessHandler(function (result) {
+        parent.postMessage({ type: 'MAPA_DEMANDA_DATA_RESULT', requestId: msg.requestId, result: result }, ALLOWED_PARENT_ORIGIN);
+      })
+      .withFailureHandler(function (error) {
+        parent.postMessage({ type: 'MAPA_DEMANDA_DATA_ERROR', requestId: msg.requestId, error: String(error && error.message || error) }, ALLOWED_PARENT_ORIGIN);
+      })
+      .getDashboardData(msg.idToken, msg.sheetName || 'data_rede_geral_dash');
+  });
+  parent.postMessage({ type: 'MAPA_DEMANDA_BRIDGE_READY' }, ALLOWED_PARENT_ORIGIN);
+})();
+</script>
+</body>
+</html>
