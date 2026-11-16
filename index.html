@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mapa de Demanda 2027 — SME Franca</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f3f6f9;color:#14243a}
+aside{position:fixed;left:0;top:0;bottom:0;width:238px;background:#102b46;color:white;padding:18px 11px;z-index:5}
+.brand{padding:8px 12px 22px;border-bottom:1px solid #ffffff30;font-weight:700;line-height:1.25}.brand .brand-title{font-size:17px;letter-spacing:.2px}.brand span{display:block;font-size:11px;opacity:.72;font-weight:normal;margin-top:4px}
+nav{margin-top:18px}nav button{width:100%;padding:11px 12px;text-align:left;background:none;border:0;color:white;border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:10px;transition:background .15s ease}nav button.active,nav button:hover{background:#146bc1}.nav-icon{width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 20px;color:#fff}.nav-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+main{margin-left:238px;padding:0 18px 34px} .header-status{font-size:13px;line-height:1.45;text-align:right}.header-status b{font-weight:700}.update-date{margin-top:5px;font-size:12px;color:#6b7785}.update-date b{font-weight:600}.top{min-height:86px;background:white;margin:0 -18px 14px;padding:10px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e7edf2;gap:18px}.header-brand{display:flex;align-items:center;gap:16px;min-width:0}.prefeitura-logo{height:62px;width:auto;object-fit:contain;flex:0 0 auto;filter:brightness(0) saturate(100%) invert(15%) sepia(35%) saturate(1850%) hue-rotate(174deg) brightness(91%) contrast(94%)}.header-divider{width:1px;height:54px;background:#d9e2ea;flex:0 0 auto}
+h1{font-size:12px;margin:0 0 3px;letter-spacing:.3px} .sub{font-size:23px;font-weight:bold} .muted{color:#68798b;font-size:11px}
+.filters{display:grid;grid-template-columns:repeat(5,1fr) 125px;gap:9px;margin-bottom:13px} .filter,.card,.kpi{background:white;border:1px solid #e5ebf0;border-radius:10px;box-shadow:0 3px 14px #102b4610}
+.filter{padding:9px} .filter label{font-size:10px;font-weight:bold;display:block;margin-bottom:5px} .filter select,.filter input{width:100%;padding:7px;border:1px solid #d7e0e8;border-radius:7px;background:white}
+.clear{border:0;border-radius:9px;background:#e7eef4;font-weight:bold;cursor:pointer}
+.page{display:none} .page.active{display:block} .head{margin:5px 2px 12px} .head h2{margin:0;font-size:20px} 
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:12px} .vacancy-kpis{grid-template-columns:repeat(2,minmax(0,1fr));max-width:720px} .vacancy-charts .card{min-width:0} .kpi{padding:12px} .kpi small{color:#68798b;font-size:12px} .kpi strong{display:block;font-size:26px;margin-top:5px}
+.grid{display:grid;grid-template-columns:1.35fr 1.1fr 1.2fr;gap:10px} .school-summary-card{margin:0 0 8px;padding:5px 12px;background:transparent;border:0;border-radius:0;box-shadow:none}.school-summary-content{display:grid;grid-template-columns:minmax(100px,.7fr) minmax(140px,.8fr) minmax(300px,2fr);gap:10px;align-items:center}.school-summary-item{padding:1px 10px;border-left:1px solid #dfe6ed;min-width:0}.school-summary-item:first-child{border-left:0;padding-left:2px}.school-summary-card h3{display:none}.school-summary-card .badge{padding:2px 6px;font-size:10px;margin:0 2px 0 0}.school-summary-item .muted{font-size:10px}.school-summary-item>div:nth-child(2){font-size:13px!important;font-weight:600}.card{padding:14px} .card h3{margin:0 0 12px;font-size:15px}
+table{width:100%;border-collapse:collapse;font-size:13px} .table{overflow:auto} th{background:#edf2f6;padding:10px 9px;text-align:left;white-space:nowrap;font-size:12px} th:not(:first-child),td.num{text-align:center} td{padding:10px 9px;border-top:1px solid #edf1f4} .num{text-align:center}
+.capacity-wrap{display:flex;align-items:center;justify-content:center;gap:22px;min-height:210px}.donut{--occupied:74;position:relative;width:150px;height:150px;border-radius:50%;background:conic-gradient(#2185e6 calc(var(--occupied)*1%),#55c98b 0);display:flex;align-items:center;justify-content:center;flex:0 0 150px}.donut::after{content:"";width:94px;height:94px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px #eef2f5;position:absolute}.donut-center{position:relative;z-index:1;text-align:center;font-weight:bold;font-size:22px;color:#14243a}.donut-center span{display:block;font-size:9px;font-weight:normal;color:#68798b;margin-top:2px}.capacity-legend{min-width:145px}.capacity-item{display:grid;grid-template-columns:12px 1fr;column-gap:8px;align-items:start;margin:10px 0}.capacity-dot{width:12px;height:12px;border-radius:50%;margin-top:3px}.capacity-dot.blue{background:#2185e6}.capacity-dot.green{background:#55c98b}.capacity-dot.gray{background:#b9c3cf}.capacity-item small{display:block;color:#68798b;font-size:11px}.capacity-item b{font-size:17px}
+.barrow{display:grid;grid-template-columns:92px minmax(0,1fr) auto;align-items:center;column-gap:8px;margin:12px 0} .barrow span:first-child{width:92px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .bar{height:13px;background:#2d86d8;border-radius:4px;min-width:2px} .barrow b{font-size:12px}
+.list{max-height:520px;overflow:auto} .school{display:block;width:100%;text-align:left;background:white;border:0;border-bottom:1px solid #eee;padding:10px;cursor:pointer} .school:hover{background:#eef5fb}
+.insights{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.region-charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.region-chart{padding:2px 0 4px}
+.region-bar-row{display:grid;grid-template-columns:72px minmax(0,1fr) 58px;align-items:center;gap:10px;margin:15px 0}
+.region-bar-label{font-size:13px;font-weight:600;color:#24364b}
+.region-bar-track{height:18px;background:#edf2f6;border-radius:5px;overflow:hidden}
+.region-bar-fill{height:100%;background:#2d86d8;border-radius:5px;min-width:2px}
+.region-bar-value{font-size:13px;font-weight:700;text-align:right;color:#172b45}
+@media(max-width:1050px){.region-charts{grid-template-columns:1fr}}
+ .insight{background:white;border:1px solid #e7edf2;border-radius:10px;padding:14px} .insight b{font-size:14px} .insight p{font-size:13px;color:#68798b;line-height:1.55}
+.badge{display:inline-block;padding:4px 8px;border-radius:12px;background:#edf4fa;font-size:12px;margin-right:4px}
+@media(max-width:1050px){.school-summary-content{grid-template-columns:1fr}.school-summary-item{border-left:0;border-top:1px solid #edf1f4;padding:7px 0}.school-summary-item:first-child{border-top:0}.aside{width:205px}main{margin-left:205px}.filters,.kpis{grid-template-columns:repeat(3,1fr)}.grid,.insights{grid-template-columns:1fr}.capacity-wrap{justify-content:flex-start}.prefeitura-logo{height:52px;filter:brightness(0) saturate(100%) invert(15%) sepia(35%) saturate(1850%) hue-rotate(174deg) brightness(91%) contrast(94%)}.sub{font-size:20px}}
+
+/* Ajustes de apresentação por página */
+#school .school-detail-table th,
+#school .school-detail-table td,
+#vacancies .table th,
+#vacancies .table td,
+#list .table th,
+#list .table td {
+  text-align: center;
+}
+#school #schoolDetailTable td,
+#vacancies #vacancyTable td,
+#list #listTable td {
+  text-align: center;
+}
+
+
+/* Página Vagas: alinhar a coluna Escola à esquerda, sobrescrevendo regras gerais de centralização */
+#vacancies table thead th:first-child, #vacancies #vacancyTable td:first-child { text-align: left !important; padding-left: 18px; }
+
+/* Página Períodos: indicadores e gráficos comparativos */
+.period-kpis{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:10px}
+.period-main-charts{margin:0 0 10px}
+.period-main-charts .card{min-width:0}
+.period-stage-card{margin-bottom:0}
+.period-donut-layout{display:flex;align-items:center;justify-content:center;gap:28px;min-height:220px;flex-wrap:wrap}
+.period-donut{width:168px;height:168px;border-radius:50%;position:relative;flex:0 0 168px;display:flex;align-items:center;justify-content:center}
+.period-donut:after{content:"";position:absolute;width:104px;height:104px;background:#fff;border-radius:50%;box-shadow:0 0 0 1px #edf1f4}
+.period-donut-center{z-index:1;text-align:center;font-size:23px;font-weight:700;color:#14243a}
+.period-donut-center small{display:block;font-size:10px;color:#68798b;font-weight:400;margin-top:3px}
+.period-donut-legend{min-width:130px}
+.period-donut-legend-row{display:grid;grid-template-columns:11px 1fr auto;gap:8px;align-items:center;margin:14px 0;font-size:12px}
+.period-donut-dot{width:11px;height:11px;border-radius:3px}
+.period-donut-legend-row b{font-size:12px}
+.period-legend{display:flex;gap:16px;flex-wrap:wrap;margin:-2px 0 12px;color:#526579;font-size:11px}
+.period-legend span{display:inline-flex;align-items:center;gap:5px}
+.period-dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+.period-dot.morning{background:#2d86d8}.period-dot.afternoon{background:#55a6e8}.period-dot.fulltime{background:#55c98b}
+.period-stage-row{display:grid;grid-template-columns:82px minmax(120px,1fr) 62px;gap:10px;align-items:center;margin:12px 0}
+.period-stage-label{font-size:12px;white-space:nowrap;font-weight:600}
+.period-stage-track{display:flex;height:18px;background:#edf2f6;border-radius:4px;overflow:hidden}
+.period-stage-segment{height:100%;min-width:0;transition:width .2s ease}
+.period-stage-segment.morning{background:#2d86d8}.period-stage-segment.afternoon{background:#55a6e8}.period-stage-segment.fulltime{background:#55c98b}
+.period-stage-total{text-align:right;font-size:12px;font-weight:700}
+.period-table-card{margin-top:0}
+@media(max-width:1050px){.period-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.period-stage-row{grid-template-columns:72px minmax(100px,1fr) 52px}.period-donut-layout{gap:14px}.period-donut{width:145px;height:145px;flex-basis:145px}}
+
+/* Interatividade e animações sutis dos filtros */
+.filters{perspective:900px;align-items:stretch}
+.filter{position:relative;min-width:0;transform:translateY(0);transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease;background:linear-gradient(145deg,#fff 0%,#fbfdff 100%);animation:filterEnter .55s cubic-bezier(.2,.75,.25,1) both}
+.filter:nth-child(2){animation-delay:.06s}.filter:nth-child(3){animation-delay:.12s}.filter:nth-child(4){animation-delay:.18s}.filter:nth-child(5){animation-delay:.24s}
+.filter:hover,.filter:focus-within{transform:translateY(-3px);border-color:#86bdf0;box-shadow:0 9px 24px #146bc122}
+.filter label{display:flex;align-items:center;gap:6px;color:#263e56;letter-spacing:.1px}
+.filter-help{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:#e8f3ff;color:#146bc1;font-size:9px;font-weight:800;transition:background .2s,color .2s;cursor:help}
+.filter:hover .filter-help,.filter:focus-within .filter-help{background:#146bc1;color:white}
+.filter select,.filter input{outline:none;transition:border-color .2s,box-shadow .2s,background .2s;cursor:pointer}
+.filter select:hover{border-color:#9abfe2;background:#fbfdff}
+.filter select:focus,.filter input:focus{border-color:#2185e6;box-shadow:0 0 0 3px #2185e61c}
+.filter-hint{position:absolute;z-index:20;left:8px;right:8px;top:calc(100% + 7px);padding:8px 10px;border-radius:7px;background:#102b46;color:white;font-size:11px;line-height:1.4;box-shadow:0 7px 20px #102b4630;opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .18s ease,transform .18s ease,visibility .18s;pointer-events:none}
+.filter-hint:before{content:"";position:absolute;top:-5px;left:15px;width:10px;height:10px;background:#102b46;transform:rotate(45deg)}
+.filter:hover .filter-hint,.filter:focus-within .filter-hint{opacity:1;visibility:visible;transform:translateY(0)}
+.clear{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 10px;transition:transform .2s ease,background .2s ease,color .2s ease,box-shadow .2s ease;animation:filterEnter .55s .3s both}
+.clear:hover{background:#146bc1;color:white;transform:translateY(-2px);box-shadow:0 7px 18px #146bc126}
+.clear:active{transform:translateY(0) scale(.97)}
+@keyframes filterEnter{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+.page.active .head,.page.active .kpi,.page.active .card,.page.active .insight{animation:contentEnter .42s ease both}
+.page.active .kpi:nth-child(2){animation-delay:.04s}.page.active .kpi:nth-child(3){animation-delay:.08s}.page.active .kpi:nth-child(4){animation-delay:.12s}.page.active .kpi:nth-child(5){animation-delay:.16s}
+@keyframes contentEnter{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.filter,.filter-hint,.filter-help,.filter select,.clear,.page.active .head,.page.active .kpi,.page.active .card,.page.active .insight{animation:none!important;transition:none!important}}
+@media(max-width:1050px){.filter-hint{display:none}}
+
+</style>
+
+<style>
+.source-badge{position:fixed;right:18px;bottom:14px;background:white;border:1px solid #dfe7ee;
+padding:7px 11px;border-radius:8px;font-size:11px;color:#68798b;box-shadow:0 3px 12px #102b4612;z-index:20}
+.source-badge a{color:#146bc1;text-decoration:none;font-weight:bold}
+</style>
+
+<style>
+.fulltime-kpis{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:10px}
+.fulltime-charts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fulltime-charts .card{min-width:0}
+.fulltime-charts .region-chart{min-height:210px}
+/* Tempo Integral: centro analítico e legendas com maior hierarquia visual */
+#fulltime .period-donut-layout{gap:34px;min-height:230px;flex-wrap:nowrap}
+#fulltime .period-donut{width:174px;height:174px;flex-basis:174px}
+#fulltime .period-donut:after{width:112px;height:112px}
+#fulltime .period-donut-center{display:none}
+#fulltime .period-donut-labels{position:absolute;inset:0;width:100%;height:100%;z-index:2;overflow:visible;pointer-events:none}
+#fulltime .period-donut-labels text{font-size:10px;font-weight:800;fill:#fff;text-anchor:middle;dominant-baseline:middle;paint-order:stroke;stroke:rgba(20,36,58,.24);stroke-width:2px;stroke-linejoin:round}
+#fulltime .period-donut-legend{min-width:180px;flex:1}
+#fulltime .period-donut-legend-row{grid-template-columns:14px minmax(0,1fr) auto;gap:11px;align-items:center;margin:12px 0;font-size:14px;color:#24364b}
+#fulltime .period-donut-dot{width:14px;height:14px;border-radius:4px}
+#fulltime .period-donut-legend-row b{font-size:15px;font-weight:700;color:#14243a;font-variant-numeric:tabular-nums}
+@media(max-width:1150px){#fulltime .period-donut-layout{gap:20px}#fulltime .period-donut{width:150px;height:150px;flex-basis:150px}#fulltime .period-donut:after{width:98px;height:98px}#fulltime .period-donut-legend-row{font-size:13px;margin:10px 0}#fulltime .period-donut-legend-row b{font-size:14px}}
+@media(max-width:760px){#fulltime .period-donut-layout{flex-wrap:wrap;gap:12px}#fulltime .period-donut-legend{min-width:100%;}}
+.fulltime-table-empty{text-align:center;color:#718198;padding:18px}
+@media(max-width:1050px){.fulltime-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.fulltime-charts{grid-template-columns:1fr}}
+
+/* Card compacto de distribuição por período na faixa de indicadores */
+.period-distribution-kpi{padding:10px 12px}
+.period-kpi-list{display:grid;gap:4px;margin-top:5px}
+.period-kpi-row{display:flex;align-items:center;justify-content:space-between;font-size:12px;line-height:1.25;color:#526579}
+.period-kpi-row span{display:flex;align-items:center;gap:6px}
+.period-kpi-row b{font-size:15px;color:#14243a;font-weight:700}
+.period-kpi-dot{display:inline-block;width:8px;height:8px;border-radius:3px}
+</style>
+
+
+<style>
+#authScreen{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#102b46,#174d79)}
+.auth-card{width:min(420px,100%);padding:34px;background:#fff;border-radius:16px;box-shadow:0 18px 60px #06182b55;text-align:center}
+.auth-card h2{margin:0 0 8px;color:#14243a;font-size:22px}
+.auth-card p{margin:0 0 24px;color:#68798b;font-size:13px;line-height:1.5}
+.auth-google{width:100%;padding:13px 16px;border:1px solid #d7e0e8;border-radius:9px;background:#fff;color:#24364b;font-weight:700;font-size:14px;cursor:pointer}
+.auth-google:hover{background:#f5f8fb}.auth-google:disabled{opacity:.6;cursor:wait}
+#authMessage{min-height:20px;margin-top:16px;color:#9a4b00;font-size:12px;line-height:1.45}
+body:not(.authenticated)>aside,body:not(.authenticated)>main{visibility:hidden}
+#logoutButton{margin-top:5px;padding:6px 10px;border:1px solid #d7e0e8;border-radius:7px;background:#fff;color:#29445e;font-size:11px;cursor:pointer}
+body:not(.authenticated) .source-badge{display:none}
+</style>
+
+</head>
+<body>
+<div id="authScreen">
+  <div class="auth-card">
+    <h2>Mapa de Demanda 2027</h2>
+    <p>Secretaria Municipal de Educação de Franca<br>Entre com sua conta Google para acessar o painel.</p>
+    <button id="googleLoginButton" class="auth-google" type="button" onclick="signInWithGoogle()">Entrar com Google</button>
+    <div id="authMessage" role="status" aria-live="polite"></div>
+  </div>
+</div>
+<aside>
+<div class="brand"><div class="brand-title">REDE MUNICIPAL</div><span>Secretaria Municipal de Educação</span></div>
+<nav>
+<button data-page="overview" class="active"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span>Visão Geral</button>
+<button data-page="school"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V5h14v16"/><path d="M8 8h2M14 8h2M8 12h2M14 12h2M8 16h2M14 16h2"/></svg></span>Escolas</button>
+<button data-page="stage"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 19V9"/><path d="M10 19V5"/><path d="M16 19v-7"/><path d="M22 19V3"/></svg></span>Etapas de Ensino</button>
+<button data-page="region"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-12A7 7 0 0 0 5 9c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg></span>Regiões</button>
+<button data-page="period"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg></span>Períodos</button>
+<button data-page="fulltime"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/><path d="M7 3 5 5M17 3l2 2"/></svg></span>Tempo Integral</button>
+<button data-page="vacancies"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 19V5h16v14"/><path d="M8 9h8M8 13h5"/><path d="M15 17h5"/><path d="M17 14v6"/></svg></span>Vagas</button>
+
+<button data-page="contacts"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M7 8h10M7 12h7M7 16h5"/></svg></span>Rede Física</button>
+<button data-page="about"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10v6"/><path d="M12 7h.01"/></svg></span>Sobre</button>
+</nav>
+</aside>
+
+<main>
+<div class="source-badge">Fonte: <a href="https://docs.google.com/spreadsheets/d/1mAwMQr5byOsyay6Uj42-HFEHas5Aw0977K-EvtuQeNs/edit?gid=0#gid=0" target="_blank">Google Sheets · data_rede_geral_dash</a></div>
+<div class="top">
+  <div class="header-brand">
+    <img class="prefeitura-logo" src="https://www3.franca.sp.gov.br/images/8fa208a68514fba96a55c7d397862c8b.png" alt="Prefeitura de Franca">
+    <div class="header-divider"></div>
+    <div><h1>SECRETARIA MUNICIPAL DE EDUCAÇÃO</h1><div class="sub">Mapa de Demanda 2027</div><div class="muted"></div></div>
+  </div>
+  <div class="muted header-status"><div></div><b id="base"></b><div class="update-date">Última atualização: <b id="lastUpdate">17/09/2026</b></div><button id="logoutButton" type="button" onclick="signOutGoogle()">Sair da conta</button></div>
+</div>
+
+<div class="filters" id="global-filters" aria-label="Filtros do mapa de demanda">
+<div class="filter" title="Filtra os dados pelas regiões da rede municipal."><label for="freg">Região</label><select id="freg" aria-label="Filtrar por região"><option value="">Todas</option></select><span class="filter-hint">Escolha uma região para refinar os resultados.</span></div>
+<div class="filter" title="Mostra os dados de uma unidade escolar específica."><label for="fesc">Escola</label><select id="fesc" aria-label="Filtrar por escola"><option value="">Todas</option></select><span class="filter-hint">As opções acompanham os demais filtros.</span></div>
+<div class="filter" title="Filtra por etapa de ensino, como Fase 1, Fase 2 ou Ensino Fundamental."><label for="feta">Etapa</label><select id="feta" aria-label="Filtrar por etapa de ensino"><option value="">Todas</option></select><span class="filter-hint">Selecione a etapa que deseja analisar.</span></div>
+<div class="filter" title="Filtra por período de atendimento: integral, manhã ou tarde."><label for="fper">Período</label><select id="fper" aria-label="Filtrar por período"><option value="">Todos</option></select><span class="filter-hint">Use Parcial para reunir manhã e tarde.</span></div>
+<div class="filter" title="Separa os dados conforme o tipo de ensino registrado na base."><label for="ftipo">Tipo de Ensino</label><select id="ftipo" aria-label="Filtrar por tipo de ensino"><option value="">Todos</option></select><span class="filter-hint">Refine a consulta pelo tipo de ensino.</span></div>
+<button class="clear" id="clear" title="Remove todos os filtros selecionados" aria-label="Limpar todos os filtros">↺ <span>Limpar filtros</span></button>
+</div>
+
+<section class="page active" id="overview">
+<div class="head"><h2>Visão Geral</h2><p class="muted">Panorama consolidado da rede.</p></div>
+<div class="kpis" id="kpis"></div>
+<div class="grid">
+  <div class="card"><h3>Alunos por Etapa</h3><div id="stages"></div></div>
+  <div class="card"><h3>Capacidade</h3><div id="capacity"></div></div>
+  <div class="card"><h3>Alunos por Região</h3><div id="regions"></div></div>
+</div>
+<div class="card table" style="margin-top:10px"><h3>Resumo por Escola</h3>
+<table><thead><tr><th>Escola</th><th>Região</th><th>Alunos</th><th>Classes</th><th>Capacidade</th><th>Vagas Disponíveis</th><th>Ocupação</th></tr></thead>
+<tbody id="overviewTable"></tbody></table></div>
+</section>
+
+<section class="page" id="school">
+<div class="head"><h2>Escolas</h2><p class="muted">Selecione uma escola para consultar os indicadores de matrícula, capacidade, turmas e vagas disponíveis da unidade.</p></div>
+<div class="card" style="margin-bottom:10px">
+  <label style="font-size:12px;font-weight:bold;display:block;margin-bottom:6px">ESCOLA</label>
+  <select id="schoolSelect" style="width:100%;padding:10px;border:1px solid #d7e0e8;border-radius:7px;background:white"></select>
+</div>
+<div class="school-summary-card"><h3 id="schoolSummaryTitle" class="visually-hidden">Selecione uma escola</h3><div id="schoolSummary" class="school-summary-content"></div></div>
+<div class="kpis" id="schoolKpis"></div>
+<div class="grid">
+  <div class="card"><h3>Alunos por Etapa</h3><div id="schoolStages"></div></div>
+  <div class="card"><h3>Vagas Disponíveis por Etapa</h3><div id="schoolVacanciesByStage"></div></div>
+  <div class="card"><h3>Alunos por Período</h3><div id="schoolPeriods"></div></div>
+</div>
+<div class="card table" style="margin-top:10px">
+  <h3>Detalhamento das Classes</h3>
+  <input id="schoolSearch" placeholder="Buscar etapa, período, turma ou nº da classe..." aria-label="Buscar nas classes da escola selecionada" style="padding:8px;width:min(100%,360px);border:1px solid #d7e0e8;border-radius:7px;margin-bottom:10px">
+  <table><thead><tr><th>Etapa</th><th>Período</th><th>Turma</th><th>Nº Classe</th><th>Alunos</th><th>Capacidade</th><th>Vagas Disponíveis</th></tr></thead>
+  <tbody id="schoolDetailTable"></tbody></table>
+</div>
+</section>
+
+<section class="page" id="stage">
+<div class="head"><h2>Etapas de Ensino</h2><p class="muted">Análise consolidada da demanda por etapa de ensino.</p></div>
+
+<div class="kpis" id="stageKpis"></div>
+
+<div class="grid">
+  <div class="card"><h3>Alunos por Região</h3><div id="stageRegions"></div></div>
+  <div class="card"><h3>Alunos por Período</h3><div id="stagePeriods"></div></div>
+  <div class="card"><h3>Resumo da Etapa</h3><div id="stageSummary"></div></div>
+</div>
+
+<div class="card table" style="margin-top:10px">
+  <h3>Distribuição por Escola</h3>
+  <table><thead><tr><th>Escola</th><th>Região</th><th>Manhã</th><th>Tarde</th><th>Integral</th><th>Classes</th><th>Alunos</th><th>Capacidade</th><th>Vagas Disponíveis</th><th>Ocupação</th></tr></thead>
+  <tbody id="stageSchoolTable"></tbody></table>
+</div>
+</section>
+
+<section class="page" id="region"><div class="head"><h2>Regiões</h2><p class="muted">Leitura territorial da demanda.</p></div>
+<div class="insights" id="regionCards"></div>
+<div class="region-charts">
+  <div class="card"><h3>Alunos por Região</h3><div id="regionStudentsChart" class="region-chart"></div></div>
+  <div class="card"><h3>Classes por Região</h3><div id="regionClassesChart" class="region-chart"></div></div>
+</div>
+<div class="card table" style="margin-top:10px"><table><thead><tr><th>Região</th><th>Escolas</th><th>Classes</th><th>Alunos</th><th>Capacidade</th><th>Vagas Disponíveis</th><th>Ocupação</th></tr></thead><tbody id="regionTable"></tbody></table></div></section>
+
+<section class="page" id="period"><div class="head"><h2>Períodos</h2><p class="muted">Comparação entre os períodos da rede.</p></div>
+<div class="kpis period-kpis" id="periodKpis"></div>
+<div class="region-charts period-main-charts">
+  <div class="card"><h3>Alunos por Período</h3><div id="periodStudentsChart" class="period-donut-layout"></div></div>
+  <div class="card period-stage-card"><h3>Alunos por Etapa e Período</h3><div class="period-legend"><span><i class="period-dot morning"></i>Manhã</span><span><i class="period-dot afternoon"></i>Tarde</span><span><i class="period-dot fulltime"></i>Integral</span></div><div id="periodStageChart"></div></div>
+</div>
+<div class="card table period-table-card"><table><thead><tr><th>Período</th><th>Escolas</th><th>Classes</th><th>Alunos</th><th>Capacidade</th><th>Vagas Disponíveis</th><th>Ocupação</th></tr></thead><tbody id="periodTable"></tbody></table></div></section>
+
+<section class="page" id="fulltime">
+<div class="head"><h2>Tempo Integral</h2><p class="muted">Acompanhamento das matrículas e da oferta de ensino em tempo integral na rede.</p></div>
+<div class="kpis fulltime-kpis" id="fulltimeKpis"></div>
+<div class="region-charts fulltime-charts">
+  <div class="card"><h3>Alunos em Tempo Integral por Etapa</h3><div id="fulltimeByStage" class="region-chart"></div></div>
+  <div class="card"><h3>Alunos em Tempo Integral por Região</h3><div id="fulltimeByRegion" class="region-chart"></div></div>
+</div>
+<div class="card table" style="margin-top:10px"><h3>Distribuição por Escola</h3>
+<table><thead><tr><th>Escola</th><th>Região</th><th>Etapa</th><th>Classes</th><th>Alunos</th><th>Capacidade</th><th>Ocupação</th></tr></thead><tbody id="fulltimeTable"></tbody></table></div>
+</section>
+
+<section class="page" id="vacancies">
+<div class="head"><h2>Vagas</h2><p class="muted">Consulta das vagas disponíveis registradas na base de dados, conforme o mapa individual.</p></div>
+<div class="kpis vacancy-kpis" id="vacancyKpis"></div>
+<div class="grid vacancy-charts" style="grid-template-columns:1fr 1fr;margin-bottom:10px">
+  <div class="card"><h3>Vagas por Etapa</h3><div id="vacancyByStage"></div></div>
+  <div class="card"><h3>Vagas por Região</h3><div id="vacancyByRegion"></div></div>
+</div>
+<div class="card table" style="margin-top:10px">
+<table><thead><tr><th>Escola</th><th>Região</th><th>Etapa</th><th>Período</th><th>Turma</th><th>Nº Classe</th><th>Alunos</th><th>Capacidade</th><th>Vagas Disponíveis</th></tr></thead><tbody id="vacancyTable"></tbody></table></div>
+</section>
+
+<section class="page" id="contacts"> <div class="card" style="padding:0;overflow:hidden">
+  <iframe id="iframe-escolas" src="https://leoncioandre-ux.github.io/encontreumaescola/" style="width:100%;min-height:20000px;border:0;" title="Encontre uma Escola Municipal" loading="lazy"></iframe>
+</div>
+</section>
+<section class="page" id="about">
+<div class="head"><h2>Sobre o Mapa de Demanda 2027</h2><p class="muted">Informações sobre a ferramenta, seus dados e canais de contato.</p></div>
+<div class="insights" style="grid-template-columns:1fr 1fr">
+  <div class="insight" style="grid-column:1 / -1">
+    <h3>Desenvolvimento</h3>
+    <p>O Mapa de Demanda 2027 foi desenvolvido pela equipe do <b>Setor de Gerenciamento de Receitas da Educação</b>, da Secretaria Municipal de Educação de Franca, com a participação de <b>André, Lara, Fernanda e Larissa</b>.</p>
+    <p>Os dados apresentados nesta ferramenta são resultado da gestão e escrituração realizadas pelas unidades escolares da Rede Municipal de Ensino no <b>Sistema de Gestão</b>. A ferramenta foi desenvolvida para organizar, consolidar e facilitar a visualização dessas informações, contribuindo para o acompanhamento da demanda e o planejamento da rede municipal de ensino.</p>
+  </div>
+  <div class="insight">
+    <h3>Alguma sugestão?</h3>
+    <p>Caso identifique alguma divergência nos dados apresentados ou queira sugerir um novo filtro, indicador ou funcionalidade para o dashboard, entre em contato com o Setor de Gerenciamento de Receitas da Educação.</p>
+    <a href="https://wa.me/551637119282" target="_blank" rel="noopener" class="btn" style="display:inline-block;margin-top:8px;text-decoration:none">💬 Entrar em contato pelo WhatsApp</a>
+  </div>
+  <div class="insight" style="grid-column:1 / -1;text-align:center">
+    <p class="muted" style="margin:0"><b>Mapa de Demanda 2027</b><br>Secretaria Municipal de Educação de Franca<br>Setor de Gerenciamento de Receitas da Educação</p>
+  </div>
+</div>
+</section>
+</main>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script>
+const GOOGLE_SHEETS_SOURCE = {
+  spreadsheetId: "1mAwMQr5byOsyay6Uj42-HFEHas5Aw0977K-EvtuQeNs",
+  gid: "0",
+  appsScriptUrl: "https://script.google.com/macros/s/AKfycbx8qnFGhfIVUZ-w6Wu45f3aSNPpQBuCiDd-qLB0XBjKyxEJjrAx5jkMxigKRCYTZ3x8/exec"
+};
+
+// Fonte configurada para a aba data_rede_geral_dash.
+// Para a leitura automática, a planilha precisa permitir a exportação CSV
+// da aba de dados; o restante do dashboard permanece igual.
+// Autenticação Google e leitura protegida pelo Apps Script.
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBEYqp5CRC4q6A83uaaoeMGH-abF5t_C94",
+  authDomain: "mapa-de-demanda-2027.firebaseapp.com",
+  projectId: "mapa-de-demanda-2027",
+  storageBucket: "mapa-de-demanda-2027.firebasestorage.app",
+  messagingSenderId: "800557235741",
+  appId: "1:800557235741:web:32133f862294e6e46e10f4"
+};
+const AUTH_BACKEND_URL = "https://script.google.com/macros/s/AKfycbytVpk5h1SYA7uT5-ZRHqEzH6HC97BVA3PUU9lG70vk_pIiykw0Th25zoStGcAtasupdQ/exec";
+const AUTHORIZED_PARENT_ORIGIN = "https://leoncioandre-ux.github.io";
+let firebaseAuth = null;
+let currentFirebaseUser = null;
+let bridgeFrame = null;
+let bridgeReady = false;
+let bridgeReadyPromise = null;
+let bridgeReadyResolve = null;
+
+function initializeFirebaseAuth() {
+  if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+  firebaseAuth = firebase.auth();
+  firebaseAuth.onAuthStateChanged(async user => {
+    currentFirebaseUser = user || null;
+    if (!user) {
+      document.body.classList.remove("authenticated");
+      $("authScreen").style.display = "flex";
+      $("authMessage").textContent = "";
+      return;
+    }
+    try {
+      $("authMessage").textContent = "Verificando autorização e carregando os dados...";
+      const liveData = await loadGoogleSheetData();
+      DATA = normalizeGoogleData(liveData);
+      fillFilterOptions();
+      $("base").textContent = `${n(DATA.length)} registros • ${n(new Set(DATA.map(d=>d.Escola)).size)} escolas`;
+      document.body.classList.add("authenticated");
+      $("authScreen").style.display = "none";
+      overview();
+    } catch (error) {
+      console.error(error);
+      $("authMessage").textContent = error.message || "Não foi possível validar seu acesso.";
+      if (/não está autorizado|não autorizad/i.test(String(error.message || ""))) {
+        await firebaseAuth.signOut();
+      }
+    }
+  });
+}
+
+async function signInWithGoogle() {
+  try {
+    $("googleLoginButton").disabled = true;
+    $("authMessage").textContent = "Abrindo autenticação do Google...";
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: "select_account" });
+    await firebaseAuth.signInWithPopup(provider);
+  } catch (error) {
+    console.error(error);
+    $("authMessage").textContent = error.message || "Falha ao entrar com Google.";
+  } finally {
+    $("googleLoginButton").disabled = false;
+  }
+}
+
+async function signOutGoogle() {
+  if (firebaseAuth) await firebaseAuth.signOut();
+}
+
+function startAuthBridge() {
+  bridgeFrame = document.createElement("iframe");
+  bridgeFrame.title = "Conexão segura com a base de dados";
+  bridgeFrame.setAttribute("aria-hidden", "true");
+  bridgeFrame.style.cssText = "position:absolute;width:1px;height:1px;left:-10000px;border:0";
+  bridgeReadyPromise = new Promise(resolve => { bridgeReadyResolve = resolve; });
+  window.addEventListener("message", event => {
+    if (!bridgeFrame || event.source !== bridgeFrame.contentWindow) return;
+    const origin = new URL(event.origin).hostname;
+    if (!(origin === "script.google.com" || origin.endsWith(".googleusercontent.com"))) return;
+    const msg = event.data || {};
+    if (msg.type === "MAPA_DEMANDA_BRIDGE_READY") {
+      bridgeReady = true;
+      if (bridgeReadyResolve) bridgeReadyResolve();
+      return;
+    }
+    if (msg.type === "MAPA_DEMANDA_DATA_RESULT" || msg.type === "MAPA_DEMANDA_DATA_ERROR") {
+      const pending = window.__mapaDemandRequests && window.__mapaDemandRequests[msg.requestId];
+      if (!pending) return;
+      delete window.__mapaDemandRequests[msg.requestId];
+      clearTimeout(pending.timer);
+      if (msg.type === "MAPA_DEMANDA_DATA_ERROR") pending.reject(new Error(msg.error || "Acesso negado."));
+      else if (!msg.result || msg.result.ok !== true || !Array.isArray(msg.result.data)) pending.reject(new Error(msg.result && msg.result.error || "Resposta inválida do servidor."));
+      else pending.resolve(msg.result.data);
+    }
+  });
+  bridgeFrame.src = AUTH_BACKEND_URL + "?mode=bridge";
+  document.body.appendChild(bridgeFrame);
+}
+
+async function loadGoogleSheetData() {
+  if (!currentFirebaseUser) throw new Error("Entre com sua conta Google para continuar.");
+  if (!bridgeReady) {
+    await Promise.race([
+      bridgeReadyPromise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error("A conexão segura com o servidor não respondeu. Verifique a implantação do Apps Script.")), 20000))
+    ]);
+  }
+  const idToken = await currentFirebaseUser.getIdToken(true);
+  const requestId = "req_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+  window.__mapaDemandRequests = window.__mapaDemandRequests || {};
+  const rawRows = await new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      delete window.__mapaDemandRequests[requestId];
+      reject(new Error("Tempo esgotado ao consultar a base protegida."));
+    }, 30000);
+    window.__mapaDemandRequests[requestId] = { resolve, reject, timer };
+    bridgeFrame.contentWindow.postMessage({
+      type: "MAPA_DEMANDA_GET_DATA",
+      requestId,
+      idToken,
+      sheetName: "data_rede_geral_dash"
+    }, "*");
+  });
+  if (!Array.isArray(rawRows) || !rawRows.length || !Array.isArray(rawRows[0])) {
+    throw new Error("A base protegida retornou um formato inesperado.");
+  }
+  const headers = rawRows[0].map(value => String(value ?? "").trim());
+  if (!headers.includes("Escola")) throw new Error('A coluna "Escola" não foi encontrada na base.');
+  return rawRows.slice(1).map(row => {
+    const item = {};
+    headers.forEach((header, index) => { item[header] = row[index] ?? ""; });
+    return item;
+  }).filter(item => {
+    const school = String(item.Escola ?? "").trim();
+    return school && school !== "#N/A";
+  });
+}
+
+
+function parseCSV(text) {
+  const rows=[]; let row=[], cell="", quoted=false;
+  for(let i=0;i<text.length;i++) {
+    const c=text[i], n=text[i+1];
+    if(c==='"') {
+      if(quoted && n==='"') { cell+='"'; i++; }
+      else quoted=!quoted;
+    } else if(c===',' && !quoted) { row.push(cell); cell=""; }
+    else if((c==='\n'||c==='\r') && !quoted) {
+      if(c==='\r' && n==='\n') i++;
+      row.push(cell); cell="";
+      if(row.some(x=>x!=="")) rows.push(row);
+      row=[];
+    } else cell+=c;
+  }
+  if(cell!=="" || row.length) { row.push(cell); rows.push(row); }
+  if(!rows.length) return [];
+  const headers=rows[0].map(x=>x.trim());
+  return rows.slice(1).map(r=>Object.fromEntries(headers.map((h,i)=>[h,r[i]??""])))
+    .filter(d=>d["Escola"]);
+}
+
+function normalizeGoogleData(data) {
+  return data.map(d=>{
+    const x={...d};
+    for(const k of ["Ano","Cod CIE","Nº Classe","Alunos","Educação Especial","Transporte","Retidos","Capacidade"]) {
+      if(x[k]!==undefined && x[k]!=="" && !isNaN(Number(String(x[k]).replace(",",".")))) {
+        x[k]=Number(String(x[k]).replace(",","."));
+      }
+    }
+    return x;
+  });
+}
+</script>
+<script>
+let DATA=[];
+const $=id=>document.getElementById(id);
+const nf=new Intl.NumberFormat('pt-BR');
+const n=x=>nf.format(Math.round(Number(x)||0));
+const esc=x=>String(x??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const num=v=>{let x=Number(v);return Number.isFinite(x)?x:0};
+const fields={freg:'Região',fesc:'Escola',feta:'Etapa',fper:'Período',ftipo:'Tipo de Ensino'};
+const nomesRegiao={'1':'Norte','2':'Sul','3':'Leste','4':'Oeste','5':'Centro','Norte':'Norte','Sul':'Sul','Leste':'Leste','Oeste':'Oeste','Centro':'Centro'};
+
+function normalizeEtapa(v){
+  const s=String(v??'').trim();
+  if(!s || s==='#N/A') return s;
+  const cleaned=s.replace(/\s+Int\.?$/i,'').trim();
+  // Unifica variações de capitalização de "Sala Disp." vindas da base.
+  if(/^sala\s+disp\.?$/i.test(cleaned)) return 'Sala Disp.';
+  return cleaned;
+}
+
+function normalizePeriodo(v){
+  const s=String(v??'').trim();
+  const t=s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  if(t.includes('integral')) return 'Integral';
+  if(t==='manha') return 'Manhã';
+  if(t==='tarde') return 'Tarde';
+  return s;
+}
+
+function filterValue(d,k){
+  if(k==='Etapa') return normalizeEtapa(d[k]);
+  if(k==='Período') return normalizePeriodo(d[k]);
+  if(k==='Região') return nomesRegiao[String(d[k])] || String(d[k]??'').trim();
+  return String(d[k]??'').trim();
+}
+
+function fillFilterOptions(){
+  const current=Object.fromEntries(Object.keys(fields).map(id=>[id,$(id).value]));
+  for(const id in fields){
+    const s=$(id), k=fields[id], currentValue=current[id];
+    const available=DATA.filter(d=>Object.entries(fields).every(([otherId,otherK])=>
+      otherId===id || !current[otherId] || filterValue(d,otherK)===String(current[otherId])
+    ));
+    let values;
+    if(k==='Etapa'){
+      values=[...new Set(available.map(d=>normalizeEtapa(d[k])).filter(v=>v && v!=='#N/A'))]
+        .sort((a,b)=>String(a).localeCompare(String(b),'pt-BR'));
+    }else if(k==='Período'){
+      values=[...new Set(available.map(d=>normalizePeriodo(d[k])).filter(v=>v && v!=='#N/A'))]
+        .sort((a,b)=>String(a).localeCompare(String(b),'pt-BR'));
+      if(values.includes('Manhã') || values.includes('Tarde')) values=['Parcial',...values.filter(v=>v!=='Parcial')];
+    }else{
+      values=[...new Set(available.map(d=>d[k]).filter(v=>{
+        const s=String(v??'').trim();
+        return s!=='' && s!=='#N/A';
+      }))].sort((a,b)=>String(a).localeCompare(String(b),'pt-BR'));
+    }
+    const allLabel=(k==='Período'||k==='Tipo de Ensino')?'Todos':'Todas';
+    s.innerHTML=`<option value="">${allLabel}</option>`;
+    values.forEach(v=>{
+      const label=(k==='Região' && nomesRegiao[String(v)]) ? nomesRegiao[String(v)] : v;
+      s.innerHTML+=`<option value="${esc(v)}">${esc(label)}</option>`;
+    });
+    if([...s.options].some(o=>o.value===String(currentValue))) s.value=currentValue;
+  }
+}
+function filtered(){
+  return DATA.filter(d=>Object.entries(fields).every(([id,k])=>{
+    const selected=$(id).value;
+    if(!selected) return true;
+    const value=filterValue(d,k);
+    if(k==='Período' && selected==='Parcial') return value==='Manhã' || value==='Tarde';
+    return value===selected;
+  }));
+}
+function isRealClass(d){
+ // Considera somente as etapas oficiais do painel, incluindo suas versões integrais.
+ // normalizeEtapa remove o sufixo Int., permitindo validar as duas modalidades
+ // sem contar registros com etapa vazia, inválida ou Sala Disp.
+ const etapa=normalizeEtapa(d['Etapa']);
+ const etapasValidas=new Set([
+  'Fase 1','Fase 2','1º Ano','2º Ano','3º Ano','4º Ano','5º Ano'
+ ]);
+ return etapasValidas.has(etapa);
+}
+// Usa o valor oficial de vagas já calculado na base, conforme o mapa individual.
+// Não recalcula vagas pela diferença entre capacidade e alunos.
+function vagasTurma(d){
+ if(!isRealClass(d)) return 0;
+ return Math.max(0, num(d['Vagas Disp.']));
+}
+function metrics(a){
+ let al=a.reduce((s,d)=>s+num(d.Alunos),0),cap=a.reduce((s,d)=>s+num(d.Capacidade),0);
+ let cl=a.filter(isRealClass).length;
+ let sa=a.reduce((s,d)=>s+vagasTurma(d),0);
+ return {al,cap,cl,es:new Set(a.map(d=>d.Escola)).size,sa,oc:cap?al/cap*100:0};
+}
+function group(a,k){
+ const g={};
+ a.forEach(d=>{
+   const x=(k==='Etapa'?normalizeEtapa(d[k]):k==='Período'?normalizePeriodo(d[k]):(d[k]||'Não informado'));
+   g[x]??={al:0,cap:0,vagas:0,cl:0,es:new Set()};
+   g[x].al+=num(d.Alunos);g[x].cap+=num(d.Capacidade);g[x].vagas+=vagasTurma(d);
+   if(isRealClass(d)) g[x].cl+=1;
+   g[x].es.add(d.Escola);
+ });
+ return g;
+}
+function summary(g, order){
+ const keys=Object.keys(g).sort(order==='alpha'
+   ? (a,b)=>a.localeCompare(b,'pt-BR')
+   : (a,b)=>g[b].al-g[a].al);
+ return keys.map(k=>{
+   let q=g[k],o=q.cap?q.al/q.cap*100:0;
+   return `<tr><td>${esc(k)}</td><td class="num">${n(q.es.size)}</td><td class="num">${n(q.cl)}</td><td class="num">${n(q.al)}</td><td class="num">${n(q.cap)}</td><td class="num">${n(q.vagas)}</td><td class="num">${o.toFixed(1).replace('.',',')}%</td></tr>`;
+ }).join('');
+}
+function overview(){
+ const a=filtered(),m=metrics(a);
+ $('kpis').innerHTML=[
+  ['👥','Nº de Alunos',n(m.al)],['📚','Nº de Classes',n(m.cl)],['🏫','Capacidade Total',n(m.cap)],['%','Ocupação',m.oc.toFixed(1).replace('.',',')+'%']
+ ].map(x=>`<div class="kpi"><small>${x[0]} ${x[1]}</small><strong>${x[2]}</strong></div>`).join('');
+ const sg=group(a,'Etapa'),mx=Math.max(...Object.values(sg).map(x=>x.al),1);
+ const ordemEtapas=['Fase 1','Fase 2','1º Ano','2º Ano','3º Ano','4º Ano','5º Ano'];
+ $('stages').innerHTML=ordemEtapas.filter(k=>sg[k]).map(k=>[k,sg[k]]).map(([k,v])=>`<div class="barrow"><span title="${esc(k)}">${esc(k)}</span><div class="bar" style="width:${Math.max(v.al/mx*100,1)}%"></div><b>${n(v.al)}</b></div>`).join('');
+ const ocup=Math.max(0,Math.min(100,m.oc)); const dispon=Math.max(0,100-ocup);
+  $('capacity').innerHTML=`<div class="capacity-wrap"><div class="donut" style="--occupied:${ocup}"><div class="donut-center">${ocup.toFixed(1).replace('.',',')}%<span>taxa de ocupação</span></div></div><div class="capacity-legend"><div class="capacity-item"><span class="capacity-dot blue"></span><div><small>Alunos (ocupada)</small><b>${n(m.al)}</b><small>${ocup.toFixed(1).replace('.',',')}% da capacidade</small></div></div><div class="capacity-item"><span class="capacity-dot green"></span><div><small>Vagas disponíveis</small><b>${n(m.sa)}</b><small>${dispon.toFixed(1).replace('.',',')}% da capacidade</small></div></div><div class="capacity-item"><span class="capacity-dot gray"></span><div><small>Capacidade total</small><b>${n(m.cap)}</b></div></div></div></div>`;
+ const rg=group(a,'Região'),rm=Math.max(...Object.values(rg).map(x=>x.al),1);
+ const nomesRegiao={'1':'Norte','2':'Sul','3':'Leste','4':'Oeste','5':'Centro','Norte':'Norte','Sul':'Sul','Leste':'Leste','Oeste':'Oeste','Centro':'Centro'};
+ $('regions').innerHTML=Object.entries(rg)
+   .sort((x,y)=>String(x[0]).localeCompare(String(y[0]),'pt-BR'))
+   .map(([k,v])=>{
+      const nome=nomesRegiao[String(k)] || String(k);
+      return `<div class="barrow"><span title="${esc(nome)}">${esc(nome)}</span><div class="bar" style="width:${Math.max(v.al/rm*100,1)}%"></div><b>${n(v.al)}</b></div>`;
+   }).join('');
+ const escolas=group(a,'Escola');
+ const escolasOrdenadas=Object.keys(escolas).sort((a,b)=>a.localeCompare(b,'pt-BR'));
+ $('overviewTable').innerHTML=escolasOrdenadas.map(k=>{
+   const q=escolas[k];
+   const registros=a.filter(d=>String(d.Escola)===String(k));
+   const regioes=[...new Set(registros.map(d=>String(d['Região']||'').trim()).filter(Boolean))];
+   const regiao=regioes.length ? regioes.join(', ') : 'Não informado';
+   const saldo=registros.reduce((s,d)=>s+vagasTurma(d),0), ocup=q.cap?q.al/q.cap*100:0;
+   return `<tr><td>${esc(k)}</td><td>${esc(regiao)}</td><td class="num">${n(q.al)}</td><td class="num">${n(q.cl)}</td><td class="num">${n(q.cap)}</td><td class="num">${n(saldo)}</td><td class="num">${ocup.toFixed(1).replace('.',',')}%</td></tr>`;
+ }).join('');
+}
+function school(){
+ const allSchools=[...new Set(DATA.map(d=>d.Escola).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+ const sel=$('schoolSelect');
+ if(!sel.dataset.ready){
+   sel.innerHTML='<option value="">Selecione uma escola...</option>'+allSchools.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('');
+   sel.dataset.ready='1';
+   sel.onchange=()=>renderSchoolDetail();
+ }
+ renderSchoolDetail();
+}
+function renderSchoolDetail(){
+ const selected=$('schoolSelect').value;
+ const zeroKpis=[['👥','Nº de Alunos','0'],['📚','Nº de Classes','0'],['🏫','Capacidade Total','0'],['↕','Vagas Disponíveis','0'],['%','Ocupação','0,0%']];
+ if(!selected){
+   $('schoolKpis').innerHTML=zeroKpis.map(x=>`<div class="kpi"><small>${x[0]} ${x[1]}</small><strong>${x[2]}</strong></div>`).join('');
+   const msg='<div class="empty-state" style="padding:12px 10px;text-align:center;color:#718096">Selecione uma escola para visualizar os dados.</div>';
+   $('schoolSummaryTitle').textContent='Selecione uma escola';
+   ['schoolStages','schoolVacanciesByStage','schoolPeriods','schoolSummary'].forEach(id=>$(id).innerHTML=msg);
+   $('schoolDetailTable').innerHTML=`<tr><td colspan="7" style="text-align:center;padding:20px;color:#718096">Selecione uma escola para consultar as classes.</td></tr>`;
+   $('schoolDetailTable').innerHTML=`<tr><td colspan="7" style="text-align:center;padding:20px;color:#718096">Selecione uma escola para consultar as classes.</td></tr>`;
+   return;
+ }
+ const a=filtered().filter(d=>String(d.Escola)===String(selected));
+ $('schoolSummaryTitle').textContent=selected;
+ const m=metrics(a);
+ // Na página Escolas, a capacidade ajustada considera os alunos matriculados
+ // mais as vagas oficiais já calculadas na coluna Vagas Disp.
+ const capacidadeAjustada=m.al+m.sa;
+ const ocupacaoAjustada=capacidadeAjustada ? m.al/capacidadeAjustada*100 : 0;
+ $('schoolKpis').innerHTML=[
+   ['👥','Nº de Alunos',n(m.al)],['📚','Nº de Classes',n(m.cl)],['🏫','Capacidade Total',n(capacidadeAjustada)],['↕','Vagas Disponíveis',n(m.sa)],['%','Ocupação',ocupacaoAjustada.toFixed(1).replace('.',',')+'%']
+ ].map(x=>`<div class="kpi"><small>${x[0]} ${x[1]}</small><strong>${x[2]}</strong></div>`).join('');
+ const sg=group(a,'Etapa'), mx=Math.max(...Object.values(sg).map(x=>x.al),1);
+ const ordemEtapas=['Fase 1','Fase 2','1º Ano','2º Ano','3º Ano','4º Ano','5º Ano'];
+ $('schoolStages').innerHTML=ordemEtapas.filter(k=>sg[k]).map(k=>{const v=sg[k];return `<div class="barrow"><span title="${esc(k)}">${esc(k)}</span><div class="bar" style="width:${Math.max(v.al/mx*100,1)}%"></div><b>${n(v.al)}</b></div>`;}).join('')||'<div class="muted">Não há dados para esta escola com os filtros selecionados.</div>';
+ const vMax=Math.max(...Object.values(sg).map(x=>x.vagas),1);
+ const etapasComVagas=ordemEtapas.filter(k=>sg[k]).concat(Object.keys(sg).filter(k=>!ordemEtapas.includes(k)).sort((x,y)=>x.localeCompare(y,'pt-BR')));
+ $('schoolVacanciesByStage').innerHTML=etapasComVagas.map(k=>{const v=sg[k];return `<div class="barrow"><span title="${esc(k)}">${esc(k)}</span><div class="bar" style="width:${Math.max(v.vagas/vMax*100,1)}%"></div><b>${n(v.vagas)}</b></div>`;}).join('')||'<div class="muted">Não há vagas registradas para esta escola com os filtros selecionados.</div>';
+ const pg=group(a,'Período'), pmx=Math.max(...Object.values(pg).map(x=>x.al),1);
+ $('schoolPeriods').innerHTML=Object.entries(pg).sort((x,y)=>y[1].al-x[1].al).map(([k,v])=>`<div class="barrow"><span title="${esc(k)}">${esc(k)}</span><div class="bar" style="width:${Math.max(v.al/pmx*100,1)}%"></div><b>${n(v.al)}</b></div>`).join('')||'<div class="muted">Não há dados para esta escola com os filtros selecionados.</div>';
+ const regioes=[...new Set(a.map(d=>String(d['Região']||'').trim()).filter(Boolean))];
+ const regiao=regioes.length?regioes.map(r=>nomesRegiao[String(r)]||r).join(', '):'Não informado';
+ $('schoolSummary').innerHTML=`<div class="school-summary-item"><div class="muted">Região</div><div style="font-size:15px;font-weight:bold;margin-top:2px">${esc(regiao)}</div></div><div class="school-summary-item"><div class="muted">Períodos</div><div style="margin-top:3px">${Object.keys(pg).map(k=>`<span class="badge">${esc(k)}</span>`).join('')||'—'}</div></div><div class="school-summary-item"><div class="muted">Etapas</div><div style="margin-top:3px">${ordemEtapas.filter(k=>sg[k]).map(k=>`<span class="badge">${esc(k)}</span>`).join('')||'—'}</div></div>`;
+ const classes=a.filter(isRealClass);
+ const q=($('schoolSearch').value||'').trim().toLocaleLowerCase('pt-BR');
+ const classesVisiveis=classes.filter(d=>!q||[normalizeEtapa(d.Etapa),normalizePeriodo(d['Período']),d.Turma,d['Nº Classe']].some(x=>String(x||'').toLocaleLowerCase('pt-BR').includes(q)));
+ $('schoolDetailTable').innerHTML=classesVisiveis.map(d=>`<tr><td>${esc(normalizeEtapa(d.Etapa))}</td><td>${esc(normalizePeriodo(d['Período']))}</td><td>${esc(d.Turma)}</td><td>${esc(d['Nº Classe'])}</td><td class="num">${n(d.Alunos)}</td><td class="num">${n(d.Capacidade)}</td><td class="num">${n(vagasTurma(d))}</td></tr>`).join('')||'<tr><td colspan="7" style="text-align:center;padding:20px;color:#718096">Nenhuma classe encontrada com os filtros selecionados.</td></tr>'; 
+}
+function stage(){
+ renderStageDetail();
+}
+
+function renderStageDetail(){
+ // Usa exclusivamente os filtros globais do topo, sem um segundo filtro de etapa.
+ const a=filtered();
+ const m=metrics(a);
+
+ $('stageKpis').innerHTML=[
+   ['👥','Nº de Alunos',n(m.al)],
+   ['📚','Nº de Classes',n(m.cl)],
+   ['🏫','Capacidade',n(m.cap)],
+   ['↕','Vagas Disponíveis',n(m.sa)],
+   ['%','Ocupação',m.oc.toFixed(1).replace('.',',')+'%']
+ ].map(x=>`<div class="kpi"><small>${x[0]} ${x[1]}</small><strong>${x[2]}</strong></div>`).join('');
+
+ const rg=group(a,'Região'), rmax=Math.max(...Object.values(rg).map(x=>x.al),1);
+ $('stageRegions').innerHTML=Object.entries(rg).sort((x,y)=>y[1].al-x[1].al).map(([k,v])=>{
+   const nome=nomesRegiao[String(k)]||String(k);
+   return `<div class="barrow"><span title="${esc(nome)}">${esc(nome)}</span><div class="bar" style="width:${Math.max(v.al/rmax*100,1)}%"></div><b>${n(v.al)}</b></div>`;
+ }).join('');
+
+ const pg=group(a,'Período'), pmax=Math.max(...Object.values(pg).map(x=>x.al),1);
+ $('stagePeriods').innerHTML=Object.entries(pg).sort((x,y)=>y[1].al-x[1].al).map(([k,v])=>
+   `<div class="barrow"><span title="${esc(k)}">${esc(k)}</span><div class="bar" style="width:${Math.max(v.al/pmax*100,1)}%"></div><b>${n(v.al)}</b></div>`
+ ).join('');
+
+ const escolas=[...new Set(a.map(d=>d.Escola).filter(Boolean))];
+ const regioes=[...new Set(a.map(d=>String(d['Região']||'').trim()).filter(Boolean))];
+ const periodos=[...new Set(a.map(d=>String(d['Período']||'').trim()).filter(Boolean))];
+ $('stageSummary').innerHTML=`
+   <div style="padding:5px 0 12px"><div class="muted">Escolas</div><div style="font-size:24px;font-weight:bold;margin-top:3px">${n(escolas.length)}</div></div>
+   <div style="padding:8px 0;border-top:1px solid #edf1f4"><div class="muted">Regiões</div><div style="margin-top:5px">${regioes.map(k=>`<span class="badge">${esc(nomesRegiao[String(k)]||k)}</span>`).join('')}</div></div>
+   <div style="padding:8px 0;border-top:1px solid #edf1f4"><div class="muted">Períodos</div><div style="margin-top:5px">${periodos.map(k=>`<span class="badge">${esc(k)}</span>`).join('')}</div></div>
+ `;
+
+ const bySchool={};
+ a.forEach(d=>{
+   const e=d.Escola||'Não informado';
+   bySchool[e]??={reg:new Set(),manha:0,tarde:0,integral:0,cl:0,al:0,cap:0,vagas:0};
+   const q=bySchool[e];
+   if(d['Região']) q.reg.add(String(d['Região']).trim());
+   if(isRealClass(d)) q.cl+=1;
+   q.al+=num(d.Alunos); q.cap+=num(d.Capacidade); q.vagas+=vagasTurma(d);
+   const periodo=normalizePeriodo(d['Período']);
+   if(periodo==='Manhã') q.manha+=num(d.Alunos);
+   else if(periodo==='Tarde') q.tarde+=num(d.Alunos);
+   else if(periodo==='Integral') q.integral+=num(d.Alunos);
+ });
+ $('stageSchoolTable').innerHTML=Object.keys(bySchool).sort((a,b)=>a.localeCompare(b,'pt-BR')).map(e=>{
+   const q=bySchool[e], saldo=q.vagas, ocup=q.cap?q.al/q.cap*100:0;
+   const reg=[...q.reg].map(r=>nomesRegiao[String(r)]||r).join(', ');
+   return `<tr><td>${esc(e)}</td><td>${esc(reg)}</td><td class="num">${n(q.manha)}</td><td class="num">${n(q.tarde)}</td><td class="num">${n(q.integral)}</td><td class="num">${n(q.cl)}</td><td class="num">${n(q.al)}</td><td class="num">${n(q.cap)}</td><td class="num">${n(saldo)}</td><td class="num">${ocup.toFixed(1).replace('.',',')}%</td></tr>`;
+ }).join('');
+}
+
+function region(){
+  let g=group(filtered(),'Região');
+  $('regionTable').innerHTML=summary(g);
+  const nomesRegiao={'1':'Norte','2':'Sul','3':'Leste','4':'Oeste','5':'Centro','Norte':'Norte','Sul':'Sul','Leste':'Leste','Oeste':'Oeste','Centro':'Centro'};
+  const dados=Object.keys(g).map(k=>({
+    chave:k,
+    nome:nomesRegiao[String(k)] || String(k),
+    alunos:g[k].al,
+    classes:g[k].cl,
+    escolas:g[k].es.size
+  })).sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
+  $('regionCards').innerHTML=dados.map(v=>{
+    return `<div class="insight"><b>${esc(v.nome)}</b><p>${n(v.alunos)} alunos em ${n(v.escolas)} escolas, ${n(v.classes)} classes.</p></div>`;
+  }).join('');
+  function desenharBarras(elementId, campo){
+    const max=Math.max(...dados.map(v=>Number(v[campo])||0),1);
+    $(elementId).innerHTML=dados.slice()
+      .sort((a,b)=>(Number(b[campo])||0)-(Number(a[campo])||0))
+      .map(v=>{
+        const valor=Number(v[campo])||0;
+        const largura=Math.max(valor/max*100, valor>0?1:0);
+        return `<div class="region-bar-row">
+          <span class="region-bar-label">${esc(v.nome)}</span>
+          <div class="region-bar-track"><div class="region-bar-fill" style="width:${largura}%"></div></div>
+          <span class="region-bar-value">${n(valor)}</span>
+        </div>`;
+      }).join('');
+  }
+  desenharBarras('regionStudentsChart','alunos');
+  desenharBarras('regionClassesChart','classes');
+}
+function period(){
+ const a=filtered();
+ const periods=['Manhã','Tarde','Integral'];
+ const stages=['Fase 1','Fase 2','1º Ano','2º Ano','3º Ano','4º Ano','5º Ano'];
+ const totals=Object.fromEntries(periods.map(p=>[p,{al:0,cap:0,vagas:0,cl:0,es:new Set()}]));
+ const stagePeriod=Object.fromEntries(stages.map(e=>[e,Object.fromEntries(periods.map(p=>[p,0]))]));
+ a.forEach(d=>{
+   const p=normalizePeriodo(d['Período']);
+   if(!totals[p]) return;
+   const q=totals[p];
+   q.al+=num(d.Alunos);q.cap+=num(d.Capacidade);q.vagas+=vagasTurma(d);
+   if(isRealClass(d)) q.cl++;
+   q.es.add(d.Escola);
+   const e=normalizeEtapa(d.Etapa);
+   if(stagePeriod[e] && periods.includes(p)) stagePeriod[e][p]+=num(d.Alunos);
+ });
+ const m=metrics(a);
+ $('periodKpis').innerHTML=[
+  `<div class="kpi"><small>👥 Alunos Matriculados</small><strong>${n(m.al)}</strong></div>`,
+  `<div class="kpi"><small>📚 Classes</small><strong>${n(m.cl)}</strong></div>`,
+  `<div class="kpi period-distribution-kpi"><small>👥 Alunos por Período</small><div class="period-kpi-list">
+    ${periods.map((p,i)=>`<div class="period-kpi-row"><span><i class="period-kpi-dot" style="background:${['#2d86d8','#55a6e8','#55c98b'][i]}"></i>${p}</span><b>${n(totals[p].al)}</b></div>`).join('')}
+  </div></div>`,
+  `<div class="kpi"><small>% Ocupação</small><strong>${m.oc.toFixed(1).replace('.',',')}%</strong></div>`
+ ].join('');
+ const drawPeriodBars=(id,field)=>{
+   const max=Math.max(...periods.map(p=>totals[p][field]),1);
+   $(id).innerHTML=periods.map(p=>{
+     const value=totals[p][field],width=value>0?Math.max(value/max*100,1):0;
+     return `<div class="region-bar-row"><span class="region-bar-label">${p}</span><div class="region-bar-track"><div class="region-bar-fill" style="width:${width}%"></div></div><span class="region-bar-value">${n(value)}</span></div>`;
+   }).join('');
+ };
+ const totalPeriodStudents=periods.reduce((sum,p)=>sum+totals[p].al,0);
+ const periodColors=['#2d86d8','#55a6e8','#55c98b'];
+ let offset=0;
+ const slices=periods.map((p,i)=>{const pct=totalPeriodStudents?totals[p].al/totalPeriodStudents*100:0;const start=offset;offset+=pct;return `${periodColors[i]} ${start}% ${offset}%`;});
+ const donutBackground=totalPeriodStudents?`conic-gradient(${slices.join(',')})`:'#edf2f6';
+ $('periodStudentsChart').innerHTML=`<div class="period-donut" style="background:${donutBackground}"><div class="period-donut-center">${n(totalPeriodStudents)}<small>alunos</small></div></div><div class="period-donut-legend">${periods.map((p,i)=>`<div class="period-donut-legend-row"><i class="period-donut-dot" style="background:${periodColors[i]}"></i><span>${p}</span><b>${n(totals[p].al)}</b></div>`).join('')}</div>`;
+ const maxStage=Math.max(...stages.map(e=>periods.reduce((sum,p)=>sum+stagePeriod[e][p],0)),1);
+ $('periodStageChart').innerHTML=stages.map(e=>{
+   const vals=stagePeriod[e],total=periods.reduce((sum,p)=>sum+vals[p],0);
+   const segs=periods.map((p,i)=>`<div class="period-stage-segment ${['morning','afternoon','fulltime'][i]}" title="${p}: ${n(vals[p])} alunos" style="width:${total?vals[p]/maxStage*100:0}%"></div>`).join('');
+   return `<div class="period-stage-row"><span class="period-stage-label">${e}</span><div class="period-stage-track">${segs}</div><span class="period-stage-total">${n(total)}</span></div>`;
+ }).join('');
+ $('periodTable').innerHTML=periods.map(p=>{
+   const q=totals[p],occ=q.cap?q.al/q.cap*100:0;
+   return `<tr><td>${p}</td><td class="num">${n(q.es.size)}</td><td class="num">${n(q.cl)}</td><td class="num">${n(q.al)}</td><td class="num">${n(q.cap)}</td><td class="num">${n(q.vagas)}</td><td class="num">${occ.toFixed(1).replace('.',',')}%</td></tr>`;
+ }).join('');
+}
+
+function fulltime(){
+ // A página é dedicada ao período Integral. Os demais filtros globais continuam valendo,
+ // mas o filtro global de Período é ignorado para não esvaziar a página por seleção de Manhã/Tarde.
+ const selected={};
+ for(const [id,k] of Object.entries(fields)) if(id!=='fper') selected[k]=$(id).value;
+ const a=DATA.filter(d=>normalizePeriodo(d['Período'])==='Integral' && Object.entries(selected).every(([k,v])=>!v || filterValue(d,k)===v));
+ const valid=a.filter(isRealClass);
+ const m=metrics(valid);
+ $('fulltimeKpis').innerHTML=[
+  ['👥','Alunos em Tempo Integral',n(m.al)],
+  ['📚','Classes em Tempo Integral',n(m.cl)],
+  ['🏫','Escolas com Tempo Integral',n(m.es)],
+  ['▦','Capacidade',n(m.cap)],
+  ['%','Ocupação',m.oc.toFixed(1).replace('.',',')+'%']
+ ].map(x=>`<div class="kpi"><small>${x[0]} ${x[1]}</small><strong>${x[2]}</strong></div>`).join('');
+ const stages=['Fase 1','Fase 2','1º Ano','2º Ano','3º Ano','4º Ano','5º Ano'];
+ const regions=['Norte','Sul','Leste','Oeste','Centro'];
+ const sumBy=(rows,key,ordered)=>{
+   const out=Object.fromEntries(ordered.map(x=>[x,0]));
+   rows.forEach(d=>{const v=key==='Etapa'?normalizeEtapa(d[key]):key==='Região'?(nomesRegiao[String(d[key])]||String(d[key]||'').trim()):String(d[key]||'').trim();if(v in out)out[v]+=num(d.Alunos)});
+   return out;
+ };
+ const drawDonut=(id,vals,order)=>{
+   const palette=['#2185e6','#55c98b','#f2b84b','#8b72d9','#ef7d68','#42b8bd','#718096'];
+   const total=order.reduce((sum,label)=>sum+(vals[label]||0),0);
+   let cursor=0;
+   const slices=order.map((label,i)=>{const value=vals[label]||0;const start=cursor;cursor+=total?value/total*100:0;return {label,value,color:palette[i%palette.length],start,end:cursor};});
+   const gradient=total?slices.map(x=>`${x.color} ${x.start}% ${x.end}%`).join(', '):'#e8edf2 0% 100%';
+   const labels=slices.filter(x=>total&&x.value&&((x.end-x.start)>=5)).map(x=>{
+     const angle=((x.start+x.end)/2)*Math.PI/50-Math.PI/2;
+     const cx=87+71*Math.cos(angle),cy=87+71*Math.sin(angle);
+     return `<text x="${cx.toFixed(1)}" y="${cy.toFixed(1)}">${n(x.value)}</text>`;
+   }).join('');
+   const svg=`<svg class="period-donut-labels" viewBox="0 0 174 174" aria-hidden="true">${labels}</svg>`;
+   $(id).innerHTML=`<div class="period-donut-layout"><div class="period-donut" style="background:conic-gradient(${gradient})">${svg}</div><div class="period-donut-legend">${slices.map(x=>`<div class="period-donut-legend-row"><i class="period-donut-dot" style="background:${x.color}"></i><span>${esc(x.label)}</span><b>${n(x.value)}</b></div>`).join('')}</div></div>`;
+ };
+ drawDonut('fulltimeByStage',sumBy(valid,'Etapa',stages),stages);
+ drawDonut('fulltimeByRegion',sumBy(valid,'Região',regions),regions);
+ const bySchool={};
+ valid.forEach(d=>{
+   const school=String(d.Escola||'Não informada');
+   bySchool[school]??={region:nomesRegiao[String(d['Região'])]||String(d['Região']||'—'),stages:{},al:0,cap:0,classes:0};
+   const q=bySchool[school],stage=normalizeEtapa(d.Etapa)||'Não informada';
+   q.stages[stage]??={al:0,cap:0,classes:0};
+   q.al+=num(d.Alunos);q.cap+=num(d.Capacidade);q.classes++;
+   q.stages[stage].al+=num(d.Alunos);q.stages[stage].cap+=num(d.Capacidade);q.stages[stage].classes++;
+ });
+ const rows=Object.entries(bySchool).flatMap(([school,q])=>Object.entries(q.stages).map(([stage,v])=>({school,region:q.region,stage,...v,occ:v.cap?v.al/v.cap*100:0})))
+   .sort((a,b)=>a.school.localeCompare(b.school,'pt-BR')||stages.indexOf(a.stage)-stages.indexOf(b.stage));
+ $('fulltimeTable').innerHTML=rows.length?rows.map(r=>`<tr><td>${esc(r.school)}</td><td>${esc(r.region)}</td><td>${esc(r.stage)}</td><td class="num">${n(r.classes)}</td><td class="num">${n(r.al)}</td><td class="num">${n(r.cap)}</td><td class="num">${r.occ.toFixed(1).replace('.',',')}%</td></tr>`).join(''):`<tr><td colspan="7" class="fulltime-table-empty">Não há registros de tempo integral para os filtros selecionados.</td></tr>`;
+}
+
+function dataPage(){
+ const a=filtered(),fs=['Ano','Cod CIE','Escola','Região','Período','Tipo de Ensino','Etapa','Turma','Nº Classe','Alunos','Educação Especial','Transporte','Retidos','Capacidade'];
+ $('dataTable').innerHTML=fs.map(f=>{let p=a.filter(d=>d[f]!=null&&d[f]!=='').length;return `<tr><td>${f}</td><td>${n(p)}</td><td>${n(a.length-p)}</td></tr>`}).join('');
+}
+function vacancies(){
+ const base=filtered().map(d=>({...d,_v:vagasTurma(d)}));
+ const a=base.filter(d=>d._v>0).sort((x,y)=>y._v-x._v);
+ const total=a.reduce((sum,d)=>sum+d._v,0);
+ $('vacancyKpis').innerHTML=[['↕','Vagas Disponíveis',n(total)],['%','Ocupação',metrics(base).oc.toFixed(1).replace('.',',')+'%']].map(x=>`<div class="kpi"><small>${x[0]} ${x[1]}</small><strong>${x[2]}</strong></div>`).join('');
+ const ordemEtapas=['Fase 1','Fase 2','1º Ano','2º Ano','3º Ano','4º Ano','5º Ano'];
+ // Inicializa todas as etapas para que continuem visíveis mesmo quando o total for zero.
+ const etapaTotals=Object.fromEntries(ordemEtapas.map(e=>[e,0]));
+ base.forEach(d=>{const e=normalizeEtapa(d.Etapa);if(Object.prototype.hasOwnProperty.call(etapaTotals,e)) etapaTotals[e]+=d._v;});
+ const regionTotals={};
+ a.forEach(d=>{const raw=String(d.Região||'Não informada');const r=nomesRegiao[raw]||raw;regionTotals[r]=(regionTotals[r]||0)+d._v;});
+ const draw=(id,totals,orderedLabels=null)=>{
+   const entries=orderedLabels ? orderedLabels.map(label=>[label,totals[label]||0]) : Object.entries(totals).sort((x,y)=>y[1]-x[1]);
+   const max=Math.max(...entries.map(x=>x[1]),1);
+   $(id).innerHTML=entries.length?entries.map(([label,value])=>`<div class="region-bar-row"><span class="region-bar-label">${esc(label)}</span><div class="region-bar-track"><div class="region-bar-fill" style="width:${Math.max(value/max*100,value>0?1:0)}%"></div></div><span class="region-bar-value">${n(value)}</span></div>`).join(''):'<p class="muted">Nenhuma vaga disponível para os filtros selecionados.</p>';
+ };
+ draw('vacancyByStage',etapaTotals,ordemEtapas);
+ draw('vacancyByRegion',regionTotals);
+ $('vacancyTable').innerHTML=a.slice(0,1000).map(d=>`<tr><td>${esc(d.Escola)}</td><td>${esc(nomesRegiao[String(d.Região)]||d.Região)}</td><td>${esc(normalizeEtapa(d.Etapa))}</td><td>${esc(normalizePeriodo(d['Período']))}</td><td>${esc(d.Turma)}</td><td>${esc(d['Nº Classe'])}</td><td class="num">${n(d.Alunos)}</td><td class="num">${n(d.Capacidade)}</td><td class="num">${n(d._v)}</td></tr>`).join('');
+}
+function render(p){if(p==='overview')overview();if(p==='school')school();if(p==='stage')stage();if(p==='region')region();if(p==='period')period();if(p==='fulltime')fulltime();if(p==='vacancies')vacancies();if(p==='data')dataPage();}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(b.dataset.page).classList.add('active');
+ document.getElementById('global-filters').style.display = ['contacts','fulltime'].includes(b.dataset.page) ? 'none' : '';
+ render(b.dataset.page);
+});
+Object.keys(fields).forEach(id=>$(id).onchange=()=>{
+ fillFilterOptions();
+ const page=document.querySelector('.page.active').id;
+ if(page==='school') renderSchoolDetail();
+ else if(page==='stage') renderStageDetail();
+ else render(page);
+});
+$('clear').onclick=()=>{Object.keys(fields).forEach(id=>$(id).value='');fillFilterOptions();render(document.querySelector('.page.active').id)};
+$('schoolSearch').oninput=()=>{if(document.querySelector('.page.active').id==='school')renderSchoolDetail();};
+startAuthBridge();
+initializeFirebaseAuth();
+</script>
+
+<script>
+window.addEventListener("message", function(event) {
+  if (!event.data || event.data.tipo !== "unidadesEscolaresAltura") return;
+  const iframe = document.getElementById("iframe-escolas");
+  if (iframe && Number(event.data.altura) > 0) {
+    iframe.style.height = Math.ceil(Number(event.data.altura)) + "px";
+  }
+});
+</script>
+
+</body></html>
