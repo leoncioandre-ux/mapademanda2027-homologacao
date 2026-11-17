@@ -210,6 +210,7 @@ padding:7px 11px;border-radius:8px;font-size:11px;color:#68798b;box-shadow:0 3px
 <button data-page="about"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10v6"/><path d="M12 7h.01"/></svg></span>Sobre</button>
 </nav>
 </aside>
+<div id="mobileMenuBackdrop" class="mobile-menu-backdrop" aria-hidden="true"></div>
 
 <main>
 <div class="source-badge">Fonte: <a href="https://docs.google.com/spreadsheets/d/1mAwMQr5byOsyay6Uj42-HFEHas5Aw0977K-EvtuQeNs/edit?gid=0#gid=0" target="_blank">Google Sheets · data_rede_geral_dash</a></div>
@@ -873,7 +874,8 @@ function render(p){if(p==='overview')overview();if(p==='school')school();if(p===
 const closeMobileMenu=()=>{document.body.classList.remove('mobile-menu-open');$('mobileMenuToggle').setAttribute('aria-expanded','false');$('mobileMenuToggle').setAttribute('aria-label','Abrir menu');};
  $('mobileMenuClose').onclick=closeMobileMenu;
 $('mobileMenuToggle').onclick=()=>{const open=!document.body.classList.contains('mobile-menu-open');document.body.classList.toggle('mobile-menu-open',open);$('mobileMenuToggle').setAttribute('aria-expanded',String(open));$('mobileMenuToggle').setAttribute('aria-label',open?'Fechar menu':'Abrir menu');};
-$('mobileMenuBackdrop').onclick=closeMobileMenu;
+const mobileMenuBackdrop=$('mobileMenuBackdrop');
+ if(mobileMenuBackdrop) mobileMenuBackdrop.onclick=closeMobileMenu;
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
  document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');
  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(b.dataset.page).classList.add('active');
