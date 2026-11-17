@@ -16,7 +16,11 @@ h1{font-size:12px;margin:0 0 3px;letter-spacing:.3px} .sub{font-size:23px;font-w
 .clear{border:0;border-radius:9px;background:#e7eef4;font-weight:bold;cursor:pointer}
 .page{display:none} .page.active{display:block} .head{margin:5px 2px 12px} .head h2{margin:0;font-size:20px} 
 .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:12px} .vacancy-kpis{grid-template-columns:repeat(2,minmax(0,1fr));max-width:720px} .vacancy-charts .card{min-width:0} .kpi{padding:12px} .kpi small{color:#68798b;font-size:12px} .kpi strong{display:block;font-size:26px;margin-top:5px}
-.grid{display:grid;grid-template-columns:1.35fr 1.1fr 1.2fr;gap:10px} .school-summary-card{margin:0 0 8px;padding:5px 12px;background:transparent;border:0;border-radius:0;box-shadow:none}.school-summary-content{display:grid;grid-template-columns:minmax(100px,.7fr) minmax(140px,.8fr) minmax(300px,2fr);gap:10px;align-items:center}.school-summary-item{padding:1px 10px;border-left:1px solid #dfe6ed;min-width:0}.school-summary-item:first-child{border-left:0;padding-left:2px}.school-summary-card h3{display:none}.school-summary-card .badge{padding:2px 6px;font-size:10px;margin:0 2px 0 0}.school-summary-item .muted{font-size:10px}.school-summary-item>div:nth-child(2){font-size:13px!important;font-weight:600}.card{padding:14px} .card h3{margin:0 0 12px;font-size:15px}
+.grid{display:grid;grid-template-columns:1.35fr 1.1fr 1.2fr;gap:10px}
+.school-charts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.school-charts .card{min-width:0}
+@media(max-width:1250px){.school-charts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.school-charts{grid-template-columns:1fr}} .school-summary-card{margin:0 0 8px;padding:5px 12px;background:transparent;border:0;border-radius:0;box-shadow:none}.school-summary-content{display:grid;grid-template-columns:minmax(100px,.7fr) minmax(140px,.8fr) minmax(300px,2fr);gap:10px;align-items:center}.school-summary-item{padding:1px 10px;border-left:1px solid #dfe6ed;min-width:0}.school-summary-item:first-child{border-left:0;padding-left:2px}.school-summary-card h3{display:none}.school-summary-card .badge{padding:2px 6px;font-size:10px;margin:0 2px 0 0}.school-summary-item .muted{font-size:10px}.school-summary-item>div:nth-child(2){font-size:13px!important;font-weight:600}.card{padding:14px} .card h3{margin:0 0 12px;font-size:15px}
 table{width:100%;border-collapse:collapse;font-size:13px} .table{overflow:auto} th{background:#edf2f6;padding:10px 9px;text-align:left;white-space:nowrap;font-size:12px} th:not(:first-child),td.num{text-align:center} td{padding:10px 9px;border-top:1px solid #edf1f4} .num{text-align:center}
 .capacity-wrap{display:flex;align-items:center;justify-content:center;gap:22px;min-height:210px}.donut{--occupied:74;position:relative;width:150px;height:150px;border-radius:50%;background:conic-gradient(#2185e6 calc(var(--occupied)*1%),#55c98b 0);display:flex;align-items:center;justify-content:center;flex:0 0 150px}.donut::after{content:"";width:94px;height:94px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px #eef2f5;position:absolute}.donut-center{position:relative;z-index:1;text-align:center;font-weight:bold;font-size:22px;color:#14243a}.donut-center span{display:block;font-size:9px;font-weight:normal;color:#68798b;margin-top:2px}.capacity-legend{min-width:145px}.capacity-item{display:grid;grid-template-columns:12px 1fr;column-gap:8px;align-items:start;margin:10px 0}.capacity-dot{width:12px;height:12px;border-radius:50%;margin-top:3px}.capacity-dot.blue{background:#2185e6}.capacity-dot.green{background:#55c98b}.capacity-dot.gray{background:#b9c3cf}.capacity-item small{display:block;color:#68798b;font-size:11px}.capacity-item b{font-size:17px}
 .barrow{display:grid;grid-template-columns:92px minmax(0,1fr) auto;align-items:center;column-gap:8px;margin:12px 0} .barrow span:first-child{width:92px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .bar{height:13px;background:#2d86d8;border-radius:4px;min-width:2px} .barrow b{font-size:12px}
@@ -223,8 +227,9 @@ body:not(.authenticated) .source-badge{display:none}
 </div>
 <div class="school-summary-card"><h3 id="schoolSummaryTitle" class="visually-hidden">Selecione uma escola</h3><div id="schoolSummary" class="school-summary-content"></div></div>
 <div class="kpis" id="schoolKpis"></div>
-<div class="grid">
+<div class="school-charts">
   <div class="card"><h3>Alunos por Etapa</h3><div id="schoolStages"></div></div>
+  <div class="card"><h3>Classes por Etapa</h3><div id="schoolClassesByStage"></div></div>
   <div class="card"><h3>Vagas Disponíveis por Etapa</h3><div id="schoolVacanciesByStage"></div></div>
   <div class="card"><h3>Alunos por Período</h3><div id="schoolPeriods"></div></div>
 </div>
@@ -662,7 +667,7 @@ function renderSchoolDetail(){
    $('schoolKpis').innerHTML=zeroKpis.map(x=>`<div class="kpi"><small>${x[0]} ${x[1]}</small><strong>${x[2]}</strong></div>`).join('');
    const msg='<div class="empty-state" style="padding:12px 10px;text-align:center;color:#718096">Selecione uma escola para visualizar os dados.</div>';
    $('schoolSummaryTitle').textContent='Selecione uma escola';
-   ['schoolStages','schoolVacanciesByStage','schoolPeriods','schoolSummary'].forEach(id=>$(id).innerHTML=msg);
+   ['schoolStages','schoolClassesByStage','schoolVacanciesByStage','schoolPeriods','schoolSummary'].forEach(id=>$(id).innerHTML=msg);
    $('schoolDetailTable').innerHTML=`<tr><td colspan="7" style="text-align:center;padding:20px;color:#718096">Selecione uma escola para consultar as classes.</td></tr>`;
    $('schoolDetailTable').innerHTML=`<tr><td colspan="7" style="text-align:center;padding:20px;color:#718096">Selecione uma escola para consultar as classes.</td></tr>`;
    return;
@@ -680,6 +685,8 @@ function renderSchoolDetail(){
  const sg=group(a,'Etapa'), mx=Math.max(...Object.values(sg).map(x=>x.al),1);
  const ordemEtapas=['Fase 1','Fase 2','1º Ano','2º Ano','3º Ano','4º Ano','5º Ano'];
  $('schoolStages').innerHTML=ordemEtapas.filter(k=>sg[k]).map(k=>{const v=sg[k];return `<div class="barrow"><span title="${esc(k)}">${esc(k)}</span><div class="bar" style="width:${Math.max(v.al/mx*100,1)}%"></div><b>${n(v.al)}</b></div>`;}).join('')||'<div class="muted">Não há dados para esta escola com os filtros selecionados.</div>';
+  const classesMax=Math.max(...Object.values(sg).map(x=>x.cl),1);
+  $('schoolClassesByStage').innerHTML=ordemEtapas.filter(k=>sg[k]).map(k=>{const v=sg[k];return `<div class="barrow"><span title="${esc(k)}">${esc(k)}</span><div class="bar" style="width:${Math.max(v.cl/classesMax*100,1)}%"></div><b>${n(v.cl)}</b></div>`;}).join('')||'<div class="muted">Não há classes para esta escola com os filtros selecionados.</div>';
  const vMax=Math.max(...Object.values(sg).map(x=>x.vagas),1);
  const etapasComVagas=ordemEtapas.filter(k=>sg[k]).concat(Object.keys(sg).filter(k=>!ordemEtapas.includes(k)).sort((x,y)=>x.localeCompare(y,'pt-BR')));
  $('schoolVacanciesByStage').innerHTML=etapasComVagas.map(k=>{const v=sg[k];return `<div class="barrow"><span title="${esc(k)}">${esc(k)}</span><div class="bar" style="width:${Math.max(v.vagas/vMax*100,1)}%"></div><b>${n(v.vagas)}</b></div>`;}).join('')||'<div class="muted">Não há vagas registradas para esta escola com os filtros selecionados.</div>';
