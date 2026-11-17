@@ -109,6 +109,13 @@ table{width:100%;border-collapse:collapse;font-size:13px} .table{overflow:auto} 
 @media(max-width:1050px){.filter-hint{display:none}}
 
 
+
+.mobile-menu-close{display:none}
+@media(max-width:760px){
+ .mobile-menu-close{display:flex;position:absolute;right:12px;top:12px;width:38px;height:38px;align-items:center;justify-content:center;border:1px solid #ffffff55;border-radius:9px;background:#ffffff12;color:#fff;font-size:27px;line-height:1;cursor:pointer;z-index:2}
+ aside .brand{padding-right:48px}
+}
+
 /* Layout responsivo para celulares e tablets */
 .mobile-menu-toggle,.mobile-menu-backdrop{display:none}
 @media(max-width:760px){
@@ -188,6 +195,7 @@ padding:7px 11px;border-radius:8px;font-size:11px;color:#68798b;box-shadow:0 3px
 </head>
 <body>
 <aside>
+<button id="mobileMenuClose" class="mobile-menu-close" type="button" aria-label="Fechar menu">×</button>
 <div class="brand"><div class="brand-title">REDE MUNICIPAL</div><span>Secretaria Municipal de Educação</span></div>
 <nav>
 <button data-page="overview" class="active"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span>Visão Geral</button>
@@ -863,6 +871,7 @@ function vacancies(){
 }
 function render(p){if(p==='overview')overview();if(p==='school')school();if(p==='stage')stage();if(p==='region')region();if(p==='period')period();if(p==='fulltime')fulltime();if(p==='vacancies')vacancies();if(p==='data')dataPage();}
 const closeMobileMenu=()=>{document.body.classList.remove('mobile-menu-open');$('mobileMenuToggle').setAttribute('aria-expanded','false');$('mobileMenuToggle').setAttribute('aria-label','Abrir menu');};
+ $('mobileMenuClose').onclick=closeMobileMenu;
 $('mobileMenuToggle').onclick=()=>{const open=!document.body.classList.contains('mobile-menu-open');document.body.classList.toggle('mobile-menu-open',open);$('mobileMenuToggle').setAttribute('aria-expanded',String(open));$('mobileMenuToggle').setAttribute('aria-label',open?'Fechar menu':'Abrir menu');};
 $('mobileMenuBackdrop').onclick=closeMobileMenu;
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
