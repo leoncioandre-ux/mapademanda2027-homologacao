@@ -563,7 +563,7 @@ function parseCoordinateRows(rows){
   if(!coords.length) throw new Error('Encontrei as colunas de coordenadas, mas não há pares válidos de latitude e longitude.');
   return coords;
 }
-function normalizeCie(v){return String(v??'').trim().replace(/\\.0$/,'').replace(/\D/g,'')}
+function normalizeCie(v){return String(v??'').trim().replace(/\.0$/,'').replace(/\D/g,'')}
 function normalizeSchool(v){return String(v??'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\b(emeb|emei|creche|escola municipal)\b/g,' ').replace(/[^a-z0-9]/g,'')}
 async function loadSchoolCoordinates(){
   const rows=await loadCoordinateSheetViaGviz('data_listaespera');
