@@ -154,6 +154,29 @@ table{width:100%;border-collapse:collapse;font-size:13px} .table{overflow:auto} 
 @media(min-width:761px) and (max-width:1050px){aside{width:205px}main{margin-left:205px}.filters{grid-template-columns:repeat(3,minmax(0,1fr))}.grid,.insights{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){aside,.mobile-menu-backdrop{transition:none}}
 
+
+/* Indicadores de classes e mapa territorial */
+.class-kpis{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:10px}
+.class-analysis-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px}
+.class-analysis-grid .card{min-width:0}
+.class-school-chart{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:10px}
+.class-bar-list{min-height:80px}
+.class-bar-list .barrow{grid-template-columns:minmax(76px,112px) minmax(0,1fr) auto}
+.class-status-note{font-size:11px;color:#68798b;margin-top:8px;line-height:1.45}
+.territory-map-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:10px;align-items:start}
+#classesMap{height:560px;min-height:380px;width:100%;border-radius:8px;background:#e9eff4;z-index:1}
+.map-side-card{padding:14px;background:#fff;border:1px solid #e5ebf0;border-radius:10px}
+.map-legend{display:grid;gap:9px;margin-top:12px;font-size:12px;color:#526579}
+.map-legend-row{display:flex;align-items:center;gap:8px}
+.map-dot{width:12px;height:12px;border-radius:50%;display:inline-block;border:2px solid #fff;box-shadow:0 0 0 1px #8292a3}
+.map-status{font-size:12px;line-height:1.5;color:#526579;margin-top:10px}
+.map-status.error{color:#9b3b32}
+.map-status.ok{color:#247448}
+.map-popup-title{font-weight:700;color:#14243a;margin-bottom:5px}
+.map-popup-line{font-size:12px;color:#465a70;margin:2px 0}
+@media(max-width:1050px){.class-analysis-grid{grid-template-columns:1fr 1fr}.territory-map-layout{grid-template-columns:1fr}.map-side-card{order:-1}}
+@media(max-width:760px){.class-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.class-analysis-grid,.class-school-chart{grid-template-columns:1fr}#classesMap{height:460px;min-height:360px}.class-bar-list .barrow{grid-template-columns:78px minmax(0,1fr) auto}}
+
 </style>
 
 <style>
@@ -192,6 +215,7 @@ padding:7px 11px;border-radius:8px;font-size:11px;color:#68798b;box-shadow:0 3px
 .period-kpi-dot{display:inline-block;width:8px;height:8px;border-radius:3px}
 </style>
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 </head>
 <body>
 <aside>
@@ -200,6 +224,8 @@ padding:7px 11px;border-radius:8px;font-size:11px;color:#68798b;box-shadow:0 3px
 <nav>
 <button data-page="overview" class="active"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span>Visão Geral</button>
 <button data-page="school"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V5h14v16"/><path d="M8 8h2M14 8h2M8 12h2M14 12h2M8 16h2M14 16h2"/></svg></span>Escolas</button>
+<button data-page="classes"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h17"/><path d="M8 16v-5M13 16V8M18 16V3"/></svg></span>Indicadores de Classes</button>
+<button data-page="territoryMap"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 6.5 9 3l6 3 6-3v14.5L15 21l-6-3-6 3z"/><path d="M9 3v15M15 6v15"/><circle cx="12" cy="10" r="2"/></svg></span>Mapa Territorial de Classes</button>
 <button data-page="stage"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 19V9"/><path d="M10 19V5"/><path d="M16 19v-7"/><path d="M22 19V3"/></svg></span>Etapas de Ensino</button>
 <button data-page="region"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-12A7 7 0 0 0 5 9c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg></span>Regiões</button>
 <button data-page="period"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg></span>Períodos</button>
@@ -266,6 +292,44 @@ padding:7px 11px;border-radius:8px;font-size:11px;color:#68798b;box-shadow:0 3px
   <table><thead><tr><th>Etapa</th><th>Período</th><th>Turma</th><th>Nº Classe</th><th>Alunos</th><th>Capacidade</th><th>Vagas Disponíveis</th></tr></thead>
   <tbody id="schoolDetailTable"></tbody></table>
 </div>
+
+</section>
+
+<section class="page" id="classes">
+<div class="head"><h2>Indicadores de Classes</h2><p class="muted">Distribuição, ocupação e capacidade das classes da rede municipal, com atualização pelos filtros globais.</p></div>
+<div class="kpis class-kpis" id="classKpis"></div>
+<div class="class-analysis-grid">
+  <div class="card"><h3>Classes por Etapa</h3><div id="classStageChart" class="class-bar-list"></div></div>
+  <div class="card"><h3>Classes por Período</h3><div id="classPeriodChart" class="class-bar-list"></div></div>
+  <div class="card"><h3>Situação de Ocupação</h3><div id="classOccupancyChart" class="class-bar-list"></div><div class="class-status-note">A classificação considera alunos, capacidade e vagas disponíveis informadas na base.</div></div>
+</div>
+<div class="card" style="margin-bottom:10px"><h3>Escolas com maior número de classes</h3><div id="classSchoolChart" class="class-bar-list"></div></div>
+<div class="card table">
+  <h3>Distribuição de Classes por Escola, Etapa e Período</h3>
+  <input id="classSearch" placeholder="Buscar escola, etapa ou período..." aria-label="Buscar na distribuição de classes" style="padding:8px;width:min(100%,360px);border:1px solid #d7e0e8;border-radius:7px;margin-bottom:10px">
+  <table><thead><tr><th>Escola</th><th>Região</th><th>Etapa</th><th>Período</th><th>Classes</th><th>Alunos</th><th>Capacidade</th><th>Vagas Disponíveis</th><th>Ocupação</th></tr></thead>
+  <tbody id="classDistributionTable"></tbody></table>
+</div>
+</section>
+
+<section class="page" id="territoryMap">
+<div class="head"><h2>Mapa Territorial de Classes</h2><p class="muted">Visualização geográfica das escolas e da distribuição de classes conforme os filtros selecionados.</p></div>
+<div class="kpis class-kpis" id="mapKpis"></div>
+<div class="territory-map-layout">
+  <div class="card" style="padding:10px"><div id="classesMap" role="application" aria-label="Mapa das escolas da rede municipal"></div></div>
+  <div class="map-side-card">
+    <h3 style="margin:0 0 8px;font-size:15px">Distribuição no território</h3>
+    <div id="mapSchoolSummary" class="muted">Selecione os filtros para visualizar as escolas.</div>
+    <div class="map-legend">
+      <div class="map-legend-row"><i class="map-dot" style="background:#55c98b"></i> Até 3 classes</div>
+      <div class="map-legend-row"><i class="map-dot" style="background:#2d86d8"></i> 4 a 7 classes</div>
+      <div class="map-legend-row"><i class="map-dot" style="background:#e59b35"></i> 8 ou mais classes</div>
+    </div>
+    <div id="mapStatus" class="map-status">Preparando a leitura das coordenadas da aba data_listaespera…</div>
+  </div>
+</div>
+<div class="card table" style="margin-top:10px"><h3>Escolas incluídas no mapa</h3>
+<table><thead><tr><th>Escola</th><th>Região</th><th>Classes</th><th>Alunos</th><th>Vagas Disponíveis</th></tr></thead><tbody id="mapSchoolTable"></tbody></table></div>
 </section>
 
 <section class="page" id="stage">
@@ -427,6 +491,90 @@ function loadGoogleSheetData() {
   });
 }
 
+
+function loadCoordinateSheetViaGviz(sheetName) {
+  return new Promise((resolve,reject)=>{
+    const callbackName='mapSheetCallback_'+Date.now();
+    const script=document.createElement('script');
+    let finished=false;
+    const cleanup=()=>{if(finished)return;finished=true;clearTimeout(timer);try{delete window[callbackName]}catch(e){}if(script.parentNode)script.parentNode.removeChild(script)};
+    window[callbackName]=response=>{
+      try{
+        const table=response&&response.table;
+        if(!table||!Array.isArray(table.cols)||!Array.isArray(table.rows)) throw new Error('A aba não retornou uma tabela válida.');
+        const headers=table.cols.map(c=>String(c.label||c.id||'').trim());
+        const rows=table.rows.map(row=>{
+          const obj={};
+          headers.forEach((key,i)=>{const cell=row.c&&row.c[i];obj[key]=cell?(cell.f??cell.v??''):''});
+          return obj;
+        }).filter(row=>Object.values(row).some(v=>String(v??'').trim()!==''));
+        cleanup();resolve(rows);
+      }catch(e){cleanup();reject(e)}
+    };
+    script.onerror=()=>{cleanup();reject(new Error('A consulta direta à aba não foi autorizada.'))};
+    const timer=setTimeout(()=>{cleanup();reject(new Error('Tempo esgotado ao consultar a aba '+sheetName+'.'))},12000);
+    const tqx='out:json;responseHandler:'+callbackName;
+    script.src='https://docs.google.com/spreadsheets/d/'+GOOGLE_SHEETS_SOURCE.spreadsheetId+'/gviz/tq?sheet='+encodeURIComponent(sheetName)+'&tqx='+encodeURIComponent(tqx)+'&_='+Date.now();
+    document.head.appendChild(script);
+  });
+}
+function loadCoordinateSheetViaAppsScript(sheetName) {
+  return new Promise((resolve,reject)=>{
+    const callbackName='mapAppsScriptCallback_'+Date.now();
+    const script=document.createElement('script');
+    let finished=false;
+    const cleanup=()=>{if(finished)return;finished=true;clearTimeout(timer);try{delete window[callbackName]}catch(e){}if(script.parentNode)script.parentNode.removeChild(script)};
+    window[callbackName]=response=>{
+      try{
+        if(!Array.isArray(response)||!response.length) throw new Error('A ponte não retornou linhas para '+sheetName+'.');
+        const headers=response[0].map(v=>String(v??'').trim());
+        const rows=response.slice(1).map(row=>Object.fromEntries(headers.map((key,i)=>[key,row[i]??''])));
+        cleanup();resolve(rows);
+      }catch(e){cleanup();reject(e)}
+    };
+    script.onerror=()=>{cleanup();reject(new Error('Não foi possível consultar a segunda aba pelo Apps Script.'))};
+    const timer=setTimeout(()=>{cleanup();reject(new Error('Tempo esgotado ao consultar a segunda aba pelo Apps Script.'))},12000);
+    script.src=GOOGLE_SHEETS_SOURCE.appsScriptUrl+'?callback='+encodeURIComponent(callbackName)+'&sheet='+encodeURIComponent(sheetName)+'&tab='+encodeURIComponent(sheetName)+'&_='+Date.now();
+    document.head.appendChild(script);
+  });
+}
+function normalizedHeader(value){
+  return String(value??'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
+}
+function findCoordinateColumn(headers,kind){
+  const normalized=headers.map(h=>({raw:h,n:normalizedHeader(h)}));
+  const aliases=kind==='lat'?['latitude','lat','coordenaday','coordy','y']:kind==='lng'?['longitude','long','lng','lon','coordenadax','coordx','x']:kind==='cie'?['codcie','codigo cie','cie','codigoinep','codigounidade'].map(normalizedHeader):['escola','unidadeescolar','nomeescola','nomeunidade','unidade'];
+  return normalized.find(x=>aliases.includes(x.n))?.raw ||
+    normalized.find(x=>kind==='lat'?x.n.includes('latitude'):kind==='lng'?x.n.includes('longitude'):kind==='cie'?(x.n.includes('cie')||x.n.includes('inep')):(x.n.includes('escola')||x.n.includes('unidade')))?.raw || '';
+}
+function parseCoordinateRows(rows){
+  if(!Array.isArray(rows)||!rows.length) throw new Error('A aba data_listaespera não retornou registros.');
+  const headers=Object.keys(rows[0]);
+  const latKey=findCoordinateColumn(headers,'lat'),lngKey=findCoordinateColumn(headers,'lng');
+  const cieKey=findCoordinateColumn(headers,'cie'),schoolKey=findCoordinateColumn(headers,'school');
+  if(!latKey||!lngKey) throw new Error('Não encontrei colunas de latitude e longitude na aba data_listaespera.');
+  if(!cieKey&&!schoolKey) throw new Error('Não encontrei uma coluna de escola ou código CIE para associar as coordenadas.');
+  const toCoord=v=>{
+    const raw=String(v??'').trim().replace(/\s/g,'').replace(',','.');
+    const x=Number(raw);return Number.isFinite(x)?x:null;
+  };
+  const coords=rows.map(row=>{
+    const lat=toCoord(row[latKey]),lng=toCoord(row[lngKey]);
+    if(lat===null||lng===null||lat < -90||lat > 90||lng < -180||lng > 180) return null;
+    return {cie:cieKey?normalizeCie(row[cieKey]):'',school:schoolKey?normalizeSchool(row[schoolKey]):'',name:schoolKey?String(row[schoolKey]??'').trim():'Unidade escolar',lat,lng};
+  }).filter(Boolean);
+  if(!coords.length) throw new Error('Encontrei as colunas de coordenadas, mas não há pares válidos de latitude e longitude.');
+  return coords;
+}
+function normalizeCie(v){return String(v??'').trim().replace(/\\.0$/,'').replace(/\D/g,'')}
+function normalizeSchool(v){return String(v??'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\b(emeb|emei|creche|escola municipal)\b/g,' ').replace(/[^a-z0-9]/g,'')}
+async function loadSchoolCoordinates(){
+  let rows,lastError;
+  try{rows=await loadCoordinateSheetViaGviz('data_listaespera');return parseCoordinateRows(rows)}catch(e){lastError=e}
+  try{rows=await loadCoordinateSheetViaAppsScript('data_listaespera');return parseCoordinateRows(rows)}catch(e){lastError=e}
+  throw lastError||new Error('Não foi possível carregar as coordenadas da aba data_listaespera.');
+}
+
 function parseCSV(text) {
   const rows=[]; let row=[], cell="", quoted=false;
   for(let i=0;i<text.length;i++) {
@@ -463,6 +611,11 @@ function normalizeGoogleData(data) {
 </script>
 <script>
 let DATA=[];
+let MAP_COORDS=[];
+let MAP_COORDS_PROMISE=null;
+let MAP_COORDS_ERROR='';
+let classesLeafletMap=null;
+let leafletLoadPromise=null;
 const $=id=>document.getElementById(id);
 const nf=new Intl.NumberFormat('pt-BR');
 const n=x=>nf.format(Math.round(Number(x)||0));
@@ -713,6 +866,167 @@ function renderStageDetail(){
  }).join('');
 }
 
+
+function uniqueClassRows(rows){
+  const valid=rows.filter(isRealClass),seen=new Set(),out=[];
+  valid.forEach((d,i)=>{
+    const sala=String(d.SALA??d['SALA']??'').trim();
+    const numero=String(d['Nº Classe']??d['N° Classe']??'').trim();
+    const cie=normalizeCie(d['Cod CIE']??d['Código CIE']??'');
+    const school=normalizeSchool(d.Escola);
+    const key=sala?'SALA:'+sala:(numero?'CLASSE:'+(cie||school)+'|'+numero:'ROW:'+i);
+    if(!seen.has(key)){seen.add(key);out.push(d)}
+  });
+  return out;
+}
+function drawClassBars(id,entries){
+  const el=$(id);if(!el)return;
+  const sorted=entries.filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
+  const max=Math.max(...sorted.map(x=>x[1]),1);
+  el.innerHTML=sorted.length?sorted.map(([label,value])=>'<div class="barrow"><span title="'+esc(label)+'">'+esc(label)+'</span><div class="bar" style="width:'+Math.max(value/max*100,1)+'%"></div><b>'+n(value)+'</b></div>').join(''):'<div class="muted">Não há classes para os filtros selecionados.</div>';
+}
+function classIndicators(){
+  const rows=uniqueClassRows(filtered());
+  const total=rows.length,students=rows.reduce((s,d)=>s+num(d.Alunos),0);
+  const capacity=rows.reduce((s,d)=>s+num(d.Capacidade),0);
+  const vacancies=rows.reduce((s,d)=>s+vagasTurma(d),0);
+  const withVacancies=rows.filter(d=>vagasTurma(d)>0).length;
+  const nearLimit=rows.filter(d=>num(d.Capacidade)>0&&num(d.Alunos)/num(d.Capacidade)>=.9&&num(d.Alunos)<=num(d.Capacidade)).length;
+  const atOrAbove=rows.filter(d=>num(d.Capacidade)>0&&num(d.Alunos)>=num(d.Capacidade)).length;
+  $('classKpis').innerHTML=[
+    ['📚','Total de Classes',n(total)],
+    ['👥','Média de Alunos por Classe',total?(students/total).toFixed(1).replace('.',','):'0,0'],
+    ['↕','Classes com Vagas',n(withVacancies)],
+    ['⚠','Próximas do Limite',n(nearLimit)],
+    ['🏫','Vagas Disponíveis',n(vacancies)]
+  ].map(x=>'<div class="kpi"><small>'+x[0]+' '+x[1]+'</small><strong>'+x[2]+'</strong></div>').join('');
+  const stages=['Fase 1','Fase 2','1º Ano','2º Ano','3º Ano','4º Ano','5º Ano'];
+  const stageCounts=Object.fromEntries(stages.map(x=>[x,0]));
+  rows.forEach(d=>{const stage=normalizeEtapa(d.Etapa);if(stage in stageCounts)stageCounts[stage]++});
+  drawClassBars('classStageChart',Object.entries(stageCounts));
+  const periodCounts={'Manhã':0,'Tarde':0,'Integral':0,'Outros':0};
+  rows.forEach(d=>{const p=normalizePeriodo(d['Período']);periodCounts[p in periodCounts?p:'Outros']++});
+  drawClassBars('classPeriodChart',Object.entries(periodCounts));
+  drawClassBars('classOccupancyChart',[
+    ['Com vagas',withVacancies],
+    ['Próximas do limite (90% a 100%)',nearLimit],
+    ['No limite ou acima',atOrAbove],
+    ['Sem informação de capacidade',rows.filter(d=>num(d.Capacidade)<=0).length]
+  ]);
+  const bySchool={};
+  rows.forEach(d=>{
+    const key=String(d.Escola||'Não informada');
+    bySchool[key]??={classes:0,students:0};
+    bySchool[key].classes++;bySchool[key].students+=num(d.Alunos);
+  });
+  drawClassBars('classSchoolChart',Object.entries(bySchool).map(([k,v])=>[k,v.classes]).sort((a,b)=>b[1]-a[1]).slice(0,12));
+  const groups={};
+  rows.forEach(d=>{
+    const school=String(d.Escola||'Não informada');
+    const stage=normalizeEtapa(d.Etapa)||'Não informada';
+    const period=normalizePeriodo(d['Período'])||'Não informado';
+    const key=[school,stage,period].join('|');
+    groups[key]??={school,region:nomesRegiao[String(d['Região'])]||String(d['Região']||'—'),stage,period,classes:0,students:0,capacity:0,vacancies:0};
+    const q=groups[key];q.classes++;q.students+=num(d.Alunos);q.capacity+=num(d.Capacidade);q.vacancies+=vagasTurma(d);
+  });
+  const query=normalizeSchool($('classSearch')?.value||'');
+  const result=Object.values(groups).filter(q=>!query||normalizeSchool(q.school+' '+q.stage+' '+q.period).includes(query))
+    .sort((a,b)=>a.school.localeCompare(b.school,'pt-BR')||a.stage.localeCompare(b.stage,'pt-BR')||a.period.localeCompare(b.period,'pt-BR'));
+  $('classDistributionTable').innerHTML=result.length?result.map(q=>{
+    const occ=q.capacity?q.students/q.capacity*100:0;
+    return '<tr><td>'+esc(q.school)+'</td><td>'+esc(q.region)+'</td><td>'+esc(q.stage)+'</td><td>'+esc(q.period)+'</td><td class="num">'+n(q.classes)+'</td><td class="num">'+n(q.students)+'</td><td class="num">'+n(q.capacity)+'</td><td class="num">'+n(q.vacancies)+'</td><td class="num">'+occ.toFixed(1).replace('.',',')+'%</td></tr>';
+  }).join(''):'<tr><td colspan="9" style="text-align:center;padding:20px;color:#718096">Nenhum registro encontrado para os filtros selecionados.</td></tr>';
+}
+function ensureLeaflet(){
+  if(window.L)return Promise.resolve(window.L);
+  if(leafletLoadPromise)return leafletLoadPromise;
+  leafletLoadPromise=new Promise((resolve,reject)=>{
+    const script=document.createElement('script');
+    script.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    script.onload=()=>window.L?resolve(window.L):reject(new Error('A biblioteca do mapa não foi carregada.'));
+    script.onerror=()=>reject(new Error('Não foi possível carregar a biblioteca cartográfica.'));
+    document.head.appendChild(script);
+  });
+  return leafletLoadPromise;
+}
+function joinSchoolCoordinate(d,byCie,byName){
+  const cie=normalizeCie(d['Cod CIE']??d['Código CIE']??'');
+  const school=normalizeSchool(d.Escola);
+  return (cie&&byCie.get(cie))||byName.get(school)||null;
+}
+async function renderTerritoryMap(){
+  const status=$('mapStatus');
+  const filteredRows=uniqueClassRows(filtered());
+  const schools={};
+  filteredRows.forEach(d=>{
+    const cie=normalizeCie(d['Cod CIE']??d['Código CIE']??'');
+    const name=String(d.Escola||'Não informada');
+    const key=cie?'CIE:'+cie:'ESCOLA:'+normalizeSchool(name);
+    schools[key]??={name,cie,region:nomesRegiao[String(d['Região'])]||String(d['Região']||'—'),classes:0,students:0,vacancies:0};
+    schools[key].classes++;schools[key].students+=num(d.Alunos);schools[key].vacancies+=vagasTurma(d);
+  });
+  const list=Object.values(schools);
+  const totalClasses=filteredRows.length;
+  $('mapKpis').innerHTML=[
+    ['📚','Classes no Filtro',n(totalClasses)],
+    ['🏫','Escolas com Classes',n(list.length)],
+    ['👥','Alunos',n(filteredRows.reduce((s,d)=>s+num(d.Alunos),0))],
+    ['↕','Vagas Disponíveis',n(filteredRows.reduce((s,d)=>s+vagasTurma(d),0))]
+  ].map(x=>'<div class="kpi"><small>'+x[0]+' '+x[1]+'</small><strong>'+x[2]+'</strong></div>').join('');
+  if(!list.length){
+    $('mapSchoolSummary').textContent='Nenhuma classe encontrada para os filtros selecionados.';
+    $('mapSchoolTable').innerHTML='<tr><td colspan="5" style="text-align:center;padding:18px">Sem registros para exibir.</td></tr>';
+    status.textContent='Ajuste ou limpe os filtros para visualizar as escolas.';
+    status.className='map-status';
+    return;
+  }
+  if(!MAP_COORDS.length&&MAP_COORDS_PROMISE){
+    status.textContent='Carregando as coordenadas da aba data_listaespera…';
+    try{MAP_COORDS=await MAP_COORDS_PROMISE}catch(e){MAP_COORDS_ERROR=String(e.message||e)}
+  }
+  if(!MAP_COORDS.length){
+    $('mapSchoolSummary').textContent=list.length+' escolas possuem classes nos filtros selecionados.';
+    $('mapSchoolTable').innerHTML=list.map(q=>'<tr><td>'+esc(q.name)+'</td><td>'+esc(q.region)+'</td><td class="num">'+n(q.classes)+'</td><td class="num">'+n(q.students)+'</td><td class="num">'+n(q.vacancies)+'</td></tr>').join('');
+    status.textContent='Ainda não foi possível acessar as coordenadas da aba data_listaespera. A tabela abaixo já apresenta as escolas e os indicadores filtrados. Detalhe técnico: '+MAP_COORDS_ERROR;
+    status.className='map-status error';
+    return;
+  }
+  let L;
+  try{L=await ensureLeaflet()}catch(e){status.textContent=e.message;status.className='map-status error';return}
+  if(!classesLeafletMap){
+    classesLeafletMap=L.map('classesMap').setView([-20.54,-47.40],12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(classesLeafletMap);
+  }
+  if(classesLeafletMap._schoolLayers) classesLeafletMap._schoolLayers.forEach(layer=>classesLeafletMap.removeLayer(layer));
+  const byCie=new Map(),byName=new Map();
+  MAP_COORDS.forEach(c=>{if(c.cie&&!byCie.has(c.cie))byCie.set(c.cie,c);if(c.school&&!byName.has(c.school))byName.set(c.school,c)});
+  const matched=[];
+  list.forEach(q=>{
+    const sample=filteredRows.find(d=>String(d.Escola||'')===q.name && (!q.cie||normalizeCie(d['Cod CIE']??'')===q.cie));
+    const coord=sample?joinSchoolCoordinate(sample,byCie,byName):null;
+    if(!coord)return;
+    matched.push({q,coord});
+  });
+  const layers=[];
+  matched.forEach(({q,coord})=>{
+    const color=q.classes>=8?'#e59b35':q.classes>=4?'#2d86d8':'#55c98b';
+    const marker=L.circleMarker([coord.lat,coord.lng],{radius:Math.min(8+q.classes*1.2,20),color:'#fff',weight:2,fillColor:color,fillOpacity:.92});
+    const popup='<div class="map-popup-title">'+esc(q.name)+'</div><div class="map-popup-line">Região: '+esc(q.region)+'</div><div class="map-popup-line">Classes: <b>'+n(q.classes)+'</b></div><div class="map-popup-line">Alunos: <b>'+n(q.students)+'</b></div><div class="map-popup-line">Vagas disponíveis: <b>'+n(q.vacancies)+'</b></div>';
+    marker.bindPopup(popup).addTo(classesLeafletMap);layers.push(marker);
+  });
+  classesLeafletMap._schoolLayers=layers;
+  if(matched.length){
+    const bounds=L.latLngBounds(matched.map(x=>[x.coord.lat,x.coord.lng]));
+    classesLeafletMap.fitBounds(bounds.pad(.12),{maxZoom:14});
+  }
+  classesLeafletMap.invalidateSize();
+  const missing=list.length-matched.length;
+  $('mapSchoolSummary').innerHTML='<b>'+n(matched.length)+'</b> de <b>'+n(list.length)+'</b> escolas encontradas com coordenadas'+(missing?' • '+n(missing)+' sem correspondência':'');
+  $('mapSchoolTable').innerHTML=list.map(q=>'<tr><td>'+esc(q.name)+'</td><td>'+esc(q.region)+'</td><td class="num">'+n(q.classes)+'</td><td class="num">'+n(q.students)+'</td><td class="num">'+n(q.vacancies)+'</td></tr>').join('');
+  status.textContent=missing?'Mapa atualizado. '+missing+' escola(s) não foram localizadas pelas coordenadas.':'Mapa atualizado com todas as escolas que possuem classes nos filtros selecionados.';
+  status.className=missing?'map-status':'map-status ok';
+}
+
 function region(){
   let g=group(filtered(),'Região');
   $('regionTable').innerHTML=summary(g);
@@ -870,7 +1184,7 @@ function vacancies(){
  draw('vacancyByRegion',regionTotals);
  $('vacancyTable').innerHTML=a.slice(0,1000).map(d=>`<tr><td>${esc(d.Escola)}</td><td>${esc(nomesRegiao[String(d.Região)]||d.Região)}</td><td>${esc(normalizeEtapa(d.Etapa))}</td><td>${esc(normalizePeriodo(d['Período']))}</td><td>${esc(d.Turma)}</td><td>${esc(d['Nº Classe'])}</td><td class="num">${n(d.Alunos)}</td><td class="num">${n(d.Capacidade)}</td><td class="num">${n(d._v)}</td></tr>`).join('');
 }
-function render(p){if(p==='overview')overview();if(p==='school')school();if(p==='stage')stage();if(p==='region')region();if(p==='period')period();if(p==='fulltime')fulltime();if(p==='vacancies')vacancies();if(p==='data')dataPage();}
+function render(p){if(p==='overview')overview();if(p==='school')school();if(p==='classes')classIndicators();if(p==='territoryMap')renderTerritoryMap();if(p==='stage')stage();if(p==='region')region();if(p==='period')period();if(p==='fulltime')fulltime();if(p==='vacancies')vacancies();if(p==='data')dataPage();}
 const closeMobileMenu=()=>{document.body.classList.remove('mobile-menu-open');$('mobileMenuToggle').setAttribute('aria-expanded','false');$('mobileMenuToggle').setAttribute('aria-label','Abrir menu');};
  $('mobileMenuClose').onclick=closeMobileMenu;
 $('mobileMenuToggle').onclick=()=>{const open=!document.body.classList.contains('mobile-menu-open');document.body.classList.toggle('mobile-menu-open',open);$('mobileMenuToggle').setAttribute('aria-expanded',String(open));$('mobileMenuToggle').setAttribute('aria-label',open?'Fechar menu':'Abrir menu');};
@@ -892,10 +1206,12 @@ Object.keys(fields).forEach(id=>$(id).onchange=()=>{
 });
 $('clear').onclick=()=>{Object.keys(fields).forEach(id=>$(id).value='');fillFilterOptions();render(document.querySelector('.page.active').id)};
 $('schoolSearch').oninput=()=>{if(document.querySelector('.page.active').id==='school')renderSchoolDetail();};
+$('classSearch').oninput=()=>{if(document.querySelector('.page.active').id==='classes')classIndicators();};
 async function initDashboard(){
   try {
     const liveData = await loadGoogleSheetData();
     DATA = normalizeGoogleData(liveData);
+    MAP_COORDS_PROMISE = loadSchoolCoordinates().then(coords=>{MAP_COORDS=coords;return coords}).catch(error=>{MAP_COORDS_ERROR=String(error.message||error);return []});
     fillFilterOptions();
     $('base').textContent=`${n(DATA.length)} registros • ${n(new Set(DATA.map(d=>d.Escola)).size)} escolas`;
     overview();
