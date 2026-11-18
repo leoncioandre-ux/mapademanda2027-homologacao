@@ -971,6 +971,11 @@ async function renderTerritoryMap(){
     ['↕','Vagas Disponíveis',n(filteredRows.reduce((s,d)=>s+vagasTurma(d),0))]
   ].map(x=>'<div class="kpi"><small>'+x[0]+' '+x[1]+'</small><strong>'+x[2]+'</strong></div>').join('');
   if(!list.length){
+    if(classesLeafletMap&&classesLeafletMap._schoolLayers){
+      classesLeafletMap._schoolLayers.forEach(layer=>classesLeafletMap.removeLayer(layer));
+      classesLeafletMap._schoolLayers=[];
+      classesLeafletMap.invalidateSize();
+    }
     $('mapSchoolSummary').textContent='Nenhuma classe encontrada para os filtros selecionados.';
     $('mapSchoolTable').innerHTML='<tr><td colspan="5" style="text-align:center;padding:18px">Sem registros para exibir.</td></tr>';
     status.textContent='Ajuste ou limpe os filtros para visualizar as escolas.';
